@@ -5,6 +5,7 @@ object Constants {
     const val HOME_SCREEN = "home_screen"
     const val ADD_EXPENSES_SCREEN = "add_expenses_screen"
     const val LOGIN_SCREEN = "login_screen"
+    const val SPLASH_SCREEN = "splash_screen"
 
     const val SOMETHING_WENT_WRONG = "Something Went Wrong"
 

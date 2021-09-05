@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
+import com.raystatic.expensemanagercompose.ui.screens.splash.SplashScreen
 
 
 @AndroidEntryPoint
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +39,16 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     NavHost(
                         navController = navController,
-                        startDestination = Constants.LOGIN_SCREEN
+                        startDestination = Constants.SPLASH_SCREEN
                     ){
+
+                        composable(
+                            route = Constants.SPLASH_SCREEN
+                        ){
+                            SplashScreen(
+                                navController = navController
+                            )
+                        }
 
                         composable(
                             route = Constants.LOGIN_SCREEN

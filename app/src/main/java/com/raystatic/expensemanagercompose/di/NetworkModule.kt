@@ -1,11 +1,15 @@
 package com.raystatic.expensemanagercompose.di
 
+import android.content.Context
+import com.google.gson.Gson
 import com.raystatic.expensemanagercompose.data.remote.ApiService
 import com.raystatic.expensemanagercompose.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,7 +26,9 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = OkHttpClient.Builder()
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context
+    ) = OkHttpClient.Builder()
         .readTimeout(60, TimeUnit.SECONDS)
         .connectTimeout(60, TimeUnit.SECONDS)
         .build()

@@ -34,5 +34,4 @@ object AppModule {
     ) = ExpenseDatastorePreference(context = context)
 
 
-
 }
