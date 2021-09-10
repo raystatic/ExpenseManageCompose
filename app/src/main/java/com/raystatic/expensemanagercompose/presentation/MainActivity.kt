@@ -39,11 +39,11 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colors.background) {
                     NavHost(
                         navController = navController,
-                        startDestination = Constants.SPLASH_SCREEN
+                        startDestination = Screen.SplashScreen.route
                     ){
 
                         composable(
-                            route = Constants.SPLASH_SCREEN
+                            route = Screen.SplashScreen.route
                         ){
                             SplashScreen(
                                 navController = navController
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = Constants.LOGIN_SCREEN
+                            route = Screen.LoginScreen.route
                         ){
                             LoginScreen(
                                 navController = navController,
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            route = Constants.HOME_SCREEN
+                            route = Screen.HomeScreen.route
                         ){
                             HomeScreen(
                                 navController = navController
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            Constants.ADD_EXPENSES_SCREEN
+                            Screen.AddExpensesScreen.route
                         ){
                             AddExpense(
                                 navController = navController

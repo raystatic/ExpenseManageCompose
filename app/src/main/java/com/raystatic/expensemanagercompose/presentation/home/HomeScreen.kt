@@ -1,5 +1,6 @@
 package com.raystatic.expensemanagercompose.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,9 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.raystatic.expensemanagercompose.R
+import com.raystatic.expensemanagercompose.presentation.Screen
+import com.raystatic.expensemanagercompose.presentation.home.components.DurationSelector
+import com.raystatic.expensemanagercompose.presentation.home.components.WelcomeCard
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
 import com.raystatic.expensemanagercompose.util.Constants
 
@@ -35,195 +38,71 @@ fun HomeScreen(
     vm: HomeViewModel = hiltViewModel()
 ) {
 
-    Column(
+    Box(
         modifier = Modifier
-            .padding(20.dp)
+            .fillMaxSize()
     ) {
-        WelcomeCard(userName = "Rahul")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        val durationSelectors = listOf(
-            DurationSelector(
-                title = "Daily"
-            ),
-            DurationSelector(
-                title = "Weekly"
-            ),
-            DurationSelector(
-                title = "Monthly"
-            )
-        )
+        val user = vm.user.observeAsState().value
 
         val selectedDuration by remember {
             vm.selectedDuration
         }
 
-        durationSelectors.forEach {
+        val durations = Constants.defaultDurationList
+        durations.forEach {
             it.selected = it.title == selectedDuration
         }
 
-        DurationSelector(
-            durationSelectors = durationSelectors,
-            vm = vm
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Expenses",
-                style = TextStyle(
-                    color = Black
-                ),
-                fontFamily = appFontFamily,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Medium
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = "Add",
-                modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        navController
-                            .navigate(Constants.ADD_EXPENSES_SCREEN)
-                    }
-            )
-
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        val expensesItems = listOf(
-            ExpensesItem(
-                title = "Shopping",
-                percentage = 28f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Transport",
-                percentage = 60f,
-                fromDate = "30 July",
-                amount = 450f,
-                backgroundColor = LightPink,
-                variantColor = LightPinkLightVariant,
-                highlightColor = Black
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            ),
-            ExpensesItem(
-                title = "Food",
-                percentage = 12f,
-                fromDate = "30 July",
-                amount = 600f,
-                backgroundColor = LightPurple,
-                variantColor = LightPurpleLightVariant,
-                highlightColor = White
-            )
-        )
-
-
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .fillMaxSize(),
+            contentPadding =  PaddingValues(16.dp)
         ){
-            items(
-                count = expensesItems.size
-            ){index->
-                val backgroundColor = if (index % 2 == 0) LightPurpleLightVariant else LightPinkLightVariant
-                val textColor = if (index % 2 == 0) White else Black
-
-                ExpensesItem(
-                    backgroundColor = backgroundColor,
-                    textColor = textColor,
-                    expensesItem = expensesItems[index]
-                ){
-
-                }
+            item {
+                WelcomeCard(userName = user?.name ?: "")
 
             }
-        }
 
+            item {
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                DurationSelector(durationSelectors = durations){
+                    vm.setSelectedDuration(it)
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Text(
+                        text = "Expenses",
+                        style = TextStyle(
+                            color = Black
+                        ),
+                        fontFamily = appFontFamily,
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                    )
+
+                    Image(
+                        painter = painterResource(id =R.drawable.ic_add),
+                        contentDescription = "add expenses",
+                        modifier = Modifier.padding(10.dp)
+                            .clickable {
+                                navController.navigate(Screen.AddExpensesScreen.route)
+                            }
+                    )
+
+                }
+            }
+
+        }
     }
 
 }
@@ -412,118 +291,4 @@ fun CircularProgressBar(
 
 }
 
-@Composable
-fun DurationSelector(
-    durationSelectors:List<DurationSelector>,
-    vm: HomeViewModel
-){
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .fillMaxWidth()
-            .background(color = Black)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(10.dp)
-        ){
-            durationSelectors.forEach {
-                DurationSelectorItem(
-                    durationSelector= it,
-                    modifier = Modifier
-                        .weight(1f)
-                ){selectedItem ->
-                    vm.setSelectedDuration(duration = selectedItem.title)
-                }
-            }
-        }
-    }
-}
 
-@Composable
-fun DurationSelectorItem(
-    durationSelector: DurationSelector,
-    modifier: Modifier = Modifier,
-    onClick:(DurationSelector) -> Unit
-){
-
-    val textColor = if (durationSelector.selected) Black else White
-    val backgroundColor = if (durationSelector.selected) White else Black
-
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(color = backgroundColor)
-            .clickable {
-                onClick(durationSelector)
-            },
-    ) {
-        Text(
-            text = durationSelector.title,
-            fontFamily = appFontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
-            style = TextStyle(
-                color = textColor,
-                textAlign = TextAlign.Center
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-        )
-    }
-
-
-}
-
-@Composable
-fun WelcomeCard(
-    userName:String
-){
-
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .background(color = LightBlue)
-    ) {
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.Bottom)
-                    .padding(20.dp)
-            ) {
-                Text(
-                    text = "Hi $userName",
-                    fontFamily = appFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-                Text(
-                    text = "Manage your expenses for today",
-                    fontFamily = appFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-            }
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_wallet),
-                contentDescription = "Wallet",
-                modifier = Modifier
-                    .size(200.dp)
-                    .weight(1f),
-            )
-        }
-
-
-    }
-
-}

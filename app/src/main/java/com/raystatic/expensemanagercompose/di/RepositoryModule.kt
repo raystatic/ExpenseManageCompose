@@ -1,8 +1,11 @@
 package com.raystatic.expensemanagercompose.di
 
+import com.raystatic.expensemanagercompose.data.local.dao.ExpenseDao
 import com.raystatic.expensemanagercompose.data.local.dao.UserDao
 import com.raystatic.expensemanagercompose.data.remote.ApiService
+import com.raystatic.expensemanagercompose.data.repositories.ExpenseRepositoryImpl
 import com.raystatic.expensemanagercompose.data.repositories.UserRepositoryImpl
+import com.raystatic.expensemanagercompose.domain.repositories.ExpenseRepository
 import com.raystatic.expensemanagercompose.domain.repositories.UserRepository
 import com.raystatic.expensemanagercompose.util.ExpenseDatastorePreference
 import dagger.Module
@@ -23,6 +26,15 @@ object RepositoryModule {
         datastorePreference: ExpenseDatastorePreference
     ):UserRepository{
         return UserRepositoryImpl(apiService,userDao, datastorePreference)
+    }
+
+    @Singleton
+    @Provides
+    fun provideExpenseRepository(
+        apiService: ApiService,
+        expenseDao: ExpenseDao
+    ):ExpenseRepository{
+        return ExpenseRepositoryImpl(apiService,expenseDao)
     }
 
 }

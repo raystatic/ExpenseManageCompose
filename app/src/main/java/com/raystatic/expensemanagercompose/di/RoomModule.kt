@@ -29,4 +29,8 @@ object RoomModule {
     @Provides
     fun provideUserDao(db: ExpenseManagerDB) = db.getUserDao()
 
+    @Singleton
+    @Provides
+    fun provideExpenserDao(db: ExpenseManagerDB) = db.getExpenseDao()
+
 }

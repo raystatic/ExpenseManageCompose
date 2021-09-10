@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.raystatic.expensemanagercompose.data.remote.dto.LoginRequestBody
+import com.raystatic.expensemanagercompose.presentation.common.Loader
 import com.raystatic.expensemanagercompose.presentation.ui.theme.Black
 import com.raystatic.expensemanagercompose.presentation.ui.theme.LightPurple
 import com.raystatic.expensemanagercompose.presentation.ui.theme.White
@@ -48,114 +50,105 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
-    Scaffold(
-        scaffoldState = scaffoldState
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
 
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            var isLoadingVisible by remember {
-                mutableStateOf(false)
-            }
-
-            val loginState = vm.loginAuthState.value
+        val loginState = vm.loginAuthState.value
 
 
-            if (loginState.success){
-                navController.popBackStack()
-                navController.navigate(Constants.HOME_SCREEN)
-            }
+        if (loginState.success){
+            navController.popBackStack()
+            navController.navigate(Constants.HOME_SCREEN)
+        }
 
-            if (loginState.error.isNotBlank()){
-                scope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(loginState.error)
-                }
-            }
-
-            if (loginState.isLoading){
-                Dialog(
-                    onDismissRequest = { isLoadingVisible = false },
-                    DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-                ) {
-                    Box(
-                        contentAlignment= Center,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .background(White, shape = RoundedCornerShape(8.dp))
-                    ) {
-                        CircularProgressIndicator(
-                            color = LightPurple
-                        )
-                    }
-                }
-            }
-
-            Text(
-                text = "Welcome!\nYou are just one tap away.",
-                fontWeight = FontWeight.Medium,
-                style = TextStyle(
-                    color = Black,
-                    textAlign = TextAlign.Start
-                ),
-                fontSize = 26.sp,
-                fontFamily = appFontFamily,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-
-                val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                    if (it.resultCode == Activity.RESULT_OK){
-                        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-                        handleSignInResult(task, scaffoldState, scope, vm)
-                    }
-                }
-
-                Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = 10.dp,
-                    modifier = Modifier
-                        .clickable {
-                            val signInIntent = googleSignInClient.signInIntent
-
-                            launcher.launch(signInIntent)
-
-                        },
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .background(color = LightPurple)
-                            .padding(top = 16.dp, bottom = 16.dp, start = 32.dp, end = 32.dp),
-                    ) {
-                        Text(
-                            text = "Login with Google",
-                            fontFamily = appFontFamily,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            style = TextStyle(
-                                color = Color.White
-                            )
-                        )
-                    }
-                }
+        if (loginState.error.isNotBlank()){
+            scope.launch {
+                scaffoldState.snackbarHostState.showSnackbar(loginState.error)
             }
         }
 
+        if (loginState.isLoading){
+            Loader(modifier = Modifier.align(Alignment.Center)) {
+
+            }
+        }
+
+        Scaffold(
+            scaffoldState = scaffoldState
+        ) {
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+
+                Text(
+                    text = "Welcome!\nYou are just one tap away.",
+                    fontWeight = FontWeight.Medium,
+                    style = TextStyle(
+                        color = Black,
+                        textAlign = TextAlign.Start
+                    ),
+                    fontSize = 26.sp,
+                    fontFamily = appFontFamily,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                        if (it.resultCode == Activity.RESULT_OK){
+                            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+                            handleSignInResult(task, scaffoldState, scope, vm)
+                        }
+                    }
+
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = 10.dp,
+                        modifier = Modifier
+                            .clickable {
+                                val signInIntent = googleSignInClient.signInIntent
+
+                                launcher.launch(signInIntent)
+
+                            },
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .background(color = LightPurple)
+                                .padding(top = 16.dp, bottom = 16.dp, start = 32.dp, end = 32.dp),
+                        ) {
+                            Text(
+                                text = "Login with Google",
+                                fontFamily = appFontFamily,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                style = TextStyle(
+                                    color = Color.White
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
     }
+
+
 
 
 }
@@ -179,7 +172,6 @@ private fun handleSignInResult(
                 email = email,
                 avatar = avatar
             )
-            Log.d("TAGDEBUG", "LoginScreen: google success: $loginRequestBody")
 
             vm.auth(loginRequestBody)
 
@@ -187,7 +179,6 @@ private fun handleSignInResult(
             coroutineScope.launch {
                 scaffoldState.snackbarHostState.showSnackbar(Constants.SOMETHING_WENT_WRONG)
             }
-            Log.d("TAGDEBUG", "LoginScreen: google error: null")
 
         }
 
@@ -195,8 +186,6 @@ private fun handleSignInResult(
         coroutineScope.launch {
             scaffoldState.snackbarHostState.showSnackbar(Constants.SOMETHING_WENT_WRONG)
         }
-
-        Log.d("TAGDEBUG", "LoginScreen: google error: ${e.message}")
 
     }
 }

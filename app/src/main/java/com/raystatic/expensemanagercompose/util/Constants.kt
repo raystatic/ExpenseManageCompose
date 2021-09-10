@@ -1,5 +1,7 @@
 package com.raystatic.expensemanagercompose.util
 
+import com.raystatic.expensemanagercompose.presentation.home.DurationSelector
+
 object Constants {
 
     const val HOME_SCREEN = "home_screen"
@@ -21,5 +23,20 @@ object Constants {
     const val USERNAMEKEY = "user_name_key"
     const val USEREMAILKEY = "user_email_key"
     const val USERAVATARKEY = "user_avatar_key"
+
+    val defaultDurationList = listOf(
+        DurationSelector(
+            title = "Daily",
+            selected = true
+        ),
+        DurationSelector(
+            title = "Weekly",
+            selected = false
+        ),
+        DurationSelector(
+            title = "Monthly",
+            selected = false
+        )
+    )
 
 }
