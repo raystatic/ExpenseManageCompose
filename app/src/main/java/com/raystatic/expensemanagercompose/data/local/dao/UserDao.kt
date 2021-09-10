@@ -1,7 +1,7 @@
 package com.raystatic.expensemanagercompose.data.local.dao
 
 import androidx.room.*
-import com.raystatic.expensemanagercompose.data.remote.models.User
+import com.raystatic.expensemanagercompose.domain.models.User
 import kotlinx.coroutines.flow.Flow
 
 @Dao
