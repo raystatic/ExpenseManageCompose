@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.raystatic.expensemanagercompose.R
 import com.raystatic.expensemanagercompose.presentation.ui.theme.LightBlue
@@ -41,10 +42,12 @@ fun WelcomeCard(
                     .padding(20.dp)
             ) {
                 Text(
-                    text = "Hi $userName",
+                    text = "Hey there,",
                     fontFamily = appFontFamily,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.fillMaxWidth(),
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = "Manage your expenses for today",

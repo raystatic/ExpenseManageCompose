@@ -1,14 +1,15 @@
 package com.raystatic.expensemanagercompose.presentation.home
 
 import android.util.Log
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -26,47 +27,72 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.raystatic.expensemanagercompose.R
+import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.presentation.Screen
 import com.raystatic.expensemanagercompose.presentation.home.components.DurationSelector
 import com.raystatic.expensemanagercompose.presentation.home.components.WelcomeCard
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
 import com.raystatic.expensemanagercompose.util.Constants
+import com.raystatic.expensemanagercompose.util.PrefManager
+import com.raystatic.expensemanagercompose.util.Utility
+import kotlinx.coroutines.launch
 
+@ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
     navController: NavController,
+    prefManager: PrefManager,
     vm: HomeViewModel = hiltViewModel()
 ) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+
+    Scaffold(
+        scaffoldState = scaffoldState
     ) {
-        val user = vm.user.observeAsState().value
-
-        val selectedDuration by remember {
-            vm.selectedDuration
-        }
-
-        val durations = Constants.defaultDurationList
-        durations.forEach {
-            it.selected = it.title == selectedDuration
-        }
-
-        LazyColumn(
+        Box(
             modifier = Modifier
-                .fillMaxSize(),
-            contentPadding =  PaddingValues(16.dp)
-        ){
-            item {
-                WelcomeCard(userName = user?.name ?: "")
+                .fillMaxSize()
+        ) {
+            val user = vm.user.observeAsState().value
 
+            val selectedDuration by remember {
+                vm.selectedDuration
             }
 
-            item {
+            val durations = Constants.defaultDurationList
+            durations.forEach {
+                it.selected = it.title == selectedDuration
+            }
+
+            val expensesFromLocal = vm.getExpensesFromCache().collectAsState(initial = emptyList()).value
+
+            val expenseListState = vm.expenseListState.value
+
+
+            if (expenseListState.error.isNotBlank()){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = expenseListState.error
+                    )
+                }
+            }
+
+            val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
+
+            if (token.isNotBlank()){
+                vm.getExpensesFromRemote(token = token)
+            }
+
+
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+
+                WelcomeCard(userName = user?.name ?: "")
 
                 Spacer(modifier = Modifier.height(10.dp))
-
                 DurationSelector(durationSelectors = durations){
                     vm.setSelectedDuration(it)
                 }
@@ -93,17 +119,65 @@ fun HomeScreen(
                     Image(
                         painter = painterResource(id =R.drawable.ic_add),
                         contentDescription = "add expenses",
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier
+                            .padding(10.dp)
                             .clickable {
                                 navController.navigate(Screen.AddExpensesScreen.route)
                             }
                     )
 
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                if (expensesFromLocal.isNotEmpty()){
+
+                    LazyColumn{
+                        itemsIndexed(expensesFromLocal){index: Int, item: Expense ->
+                            val backgroundColor: Color
+                            val highlightColor: Color
+                            if (index%2 != 0){
+                                backgroundColor = LightPurple
+                                highlightColor = White
+                            }else{
+                                backgroundColor = LightPink
+                                highlightColor = Black
+                            }
+
+                            ExpensesItem(
+                                backgroundColor = backgroundColor,
+                                textColor = highlightColor,
+                                expensesItem = item,
+                                onClick ={
+
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
+                    }
+
+
+                }else{
+                    Box(modifier = Modifier.fillMaxSize()){
+                        Text(
+                            text = "No expenses yet.",
+                            style = TextStyle(
+                                color = Black
+                            ),
+                            fontSize =  16.sp,
+                            fontFamily = appFontFamily,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
+
             }
 
         }
     }
+
+
 
 }
 
@@ -111,8 +185,8 @@ fun HomeScreen(
 fun ExpensesItem(
     backgroundColor: Color,
     textColor:Color,
-    expensesItem: ExpensesItem,
-    onClick:(ExpensesItem) -> Unit
+    expensesItem: Expense,
+    onClick:(Expense) -> Unit
 ){
 
     Box(
@@ -142,7 +216,7 @@ fun ExpensesItem(
                 )
 
                 Text(
-                    text = expensesItem.fromDate,
+                    text = expensesItem.date?.let { Utility.formatDate(it) } ?: Utility.formatDate(expensesItem.updatedAt),
                     style = TextStyle(
                         color = textColor
                     ),

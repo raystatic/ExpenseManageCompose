@@ -5,6 +5,7 @@ import com.raystatic.expensemanagercompose.domain.models.Expense
 data class ExpenseDTO(
     val amount: Float,
     val createdAt: String,
+    val date:String?=null,
     val id: Int,
     val title: String,
     val updatedAt: String,
@@ -17,6 +18,7 @@ fun ExpenseDTO.toExpense():Expense{
         createdAt = createdAt,
         amount = amount,
         title = title,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        date = date
     )
 }

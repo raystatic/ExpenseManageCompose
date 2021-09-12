@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                             route = Screen.HomeScreen.route
                         ){
                             HomeScreen(
-                                navController = navController
+                                navController = navController,
+                                prefManager = prefManager
                             )
                         }
 

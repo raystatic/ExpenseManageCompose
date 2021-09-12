@@ -10,5 +10,6 @@ data class Expense(
     val title:String,
     val amount:Float,
     val updatedAt:String,
-    val createdAt:String
+    val createdAt:String,
+    val date:String?=null
 )
