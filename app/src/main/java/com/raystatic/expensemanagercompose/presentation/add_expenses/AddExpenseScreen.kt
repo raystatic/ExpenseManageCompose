@@ -27,15 +27,19 @@ import com.raystatic.expensemanagercompose.R
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
 import com.raystatic.expensemanagercompose.presentation.common.Loader
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
+import com.raystatic.expensemanagercompose.util.Constants
+import com.raystatic.expensemanagercompose.util.PrefManager
 import com.raystatic.expensemanagercompose.util.Utility
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.*
 
 @Composable
 fun AddExpense(
     navController: NavController,
+    prefManager: PrefManager,
     vm:AddExpenseViewModel = hiltViewModel()
 ){
 
@@ -45,51 +49,45 @@ fun AddExpense(
 
         val scope = rememberCoroutineScope()
         val scaffoldState = rememberScaffoldState()
+
         Scaffold(
-            scaffoldState = scaffoldState
+            scaffoldState = scaffoldState,
         ) {
 
-            val addExpenseState = vm.addExpenseState.value
 
-            if (addExpenseState.addedExpense!=null){
-                scope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar("New expense added")
-                }
-                navController.popBackStack()
-            }
 
-            if (addExpenseState.error.isNotBlank()){
-                scope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(addExpenseState.error)
-                }
-            }
+            val isAddRequestHandled = vm.isAddRequestHandled.value
 
-            if (addExpenseState.isLoading){
-                Loader(
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
+            if (!isAddRequestHandled){
 
-                }
-            }
+                val addExpenseState = vm.addExpenseState.value
 
-            val addExpenseRequest = vm.addExpenseRequest.value
-            addExpenseRequest?.let {
-                if (it.title.isEmpty()){
+                if (addExpenseState.error.isNotBlank()){
+                    vm.setIsAddRequestHandled(true)
                     scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar("Title cannot be empty")
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = addExpenseState.error,
+                        )
                     }
-                    return@let
                 }
 
-                if (it.amount == 0f){
+                if (addExpenseState.addedExpense!=null){
+                    vm.setIsAddRequestHandled(true)
                     scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar("Amount cannot be 0")
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = "New expense added",
+                        )
                     }
-                    return@let
+                    navController.navigateUp()
                 }
 
-                vm.addExpense(it)
+                if (addExpenseState.isLoading){
+                    Loader(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
 
+                    }
+                }
             }
 
             val defaultTitle = ""
@@ -192,6 +190,10 @@ fun AddExpense(
                     mutableStateOf(Utility.formatDate(localDate.toString()))
                 }
 
+                var selectedDateInIso by remember {
+                    mutableStateOf(Utility.getDateInIso(LocalDate.now()))
+                }
+
                 val dialog = remember {
                     MaterialDialog()
                 }
@@ -205,6 +207,7 @@ fun AddExpense(
                     ) {
                     datepicker{date->
                         selectedDate = Utility.formatDate(date.toString())
+                        selectedDateInIso = Utility.getDateInIso(date)
                     }
                 }
 
@@ -238,12 +241,32 @@ fun AddExpense(
                     RoundedButton(
                         text = "Submit",
                     ) {
-                        val addExpenseRequest = AddExpenseRequest(
-                            title = expenseTitle.value,
-                            amount = expenseAmount.value
-                        )
-                        vm.setAddExpenseRequest(addExpenseRequest = addExpenseRequest)
-                    }
+                        vm.setIsAddRequestHandled(false)
+
+                        if (expenseTitle.value.isEmpty()){
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar("Title cannot be empty")
+                            }
+                            return@RoundedButton
+                        }
+
+                        if (expenseAmount.value == 0f){
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar("Amount cannot be 0")
+                            }
+                            return@RoundedButton
+                        }
+
+                        val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
+                        if (token.isNotBlank()){
+                            val addExpenseRequest = AddExpenseRequest(
+                                title = expenseTitle.value,
+                                amount = expenseAmount.value,
+                                date = selectedDateInIso.toString()
+                            )
+                            vm.addExpense(addExpenseRequest = addExpenseRequest, token = token)
+                        }
+                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
                 }

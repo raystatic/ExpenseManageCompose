@@ -2,6 +2,9 @@ package com.raystatic.expensemanagercompose.util
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object Utility {
@@ -21,6 +24,12 @@ object Utility {
         sdf.applyPattern("yyyy-MM-dd")
         sdf.timeZone = TimeZone.getTimeZone("UTC")
         return sdf.parse(d)
+    }
+
+    fun getDateInIso(d: LocalDate): String {
+
+        val df = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'")
+        return d.atStartOfDay().atOffset(ZoneOffset.UTC).format(df)
     }
 
 }

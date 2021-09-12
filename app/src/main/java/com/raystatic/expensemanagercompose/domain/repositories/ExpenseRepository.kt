@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ExpenseRepository {
 
-    fun addExpense(addExpenseRequest: AddExpenseRequest): Flow<Resource<Expense>>
+    fun addExpense(addExpenseRequest: AddExpenseRequest, token:String): Flow<Resource<Expense>>
 
 }

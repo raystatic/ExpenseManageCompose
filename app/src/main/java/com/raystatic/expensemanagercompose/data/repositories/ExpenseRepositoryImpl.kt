@@ -19,10 +19,10 @@ class ExpenseRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao
 ): ExpenseRepository{
 
-    override fun addExpense(addExpenseRequest: AddExpenseRequest): Flow<Resource<Expense>> = flow {
+    override fun addExpense(addExpenseRequest: AddExpenseRequest, token:String): Flow<Resource<Expense>> = flow {
         try {
             emit(Resource.loading(null))
-            val response = apiService.addExpense(addExpenseRequest = addExpenseRequest)
+            val response = apiService.addExpense(addExpenseRequest = addExpenseRequest, token = token)
             if (!response.error){
                 response.data?.let {expenseDTO ->
                     val expense = expenseDTO.toExpense()

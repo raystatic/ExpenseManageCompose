@@ -6,7 +6,7 @@ import com.raystatic.expensemanagercompose.data.remote.dto.LoginRequestBody
 import com.raystatic.expensemanagercompose.domain.models.User
 import com.raystatic.expensemanagercompose.domain.repositories.UserRepository
 import com.raystatic.expensemanagercompose.util.Constants
-import com.raystatic.expensemanagercompose.util.ExpenseDatastorePreference
+import com.raystatic.expensemanagercompose.util.PrefManager
 import com.raystatic.expensemanagercompose.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val userDao: UserDao,
-    private val datastorePreference: ExpenseDatastorePreference
+    private val prefManager: PrefManager
 ): UserRepository {
 
     override fun getUser(): Flow<User> {
@@ -32,7 +32,7 @@ class UserRepositoryImpl @Inject constructor(
                 response.data?.let {
                     userDao.insertUser(it)
                 }
-                datastorePreference.updateJWTToken(response.token ?: "")
+                prefManager.saveString(Constants.USERTOKENKEY,response.token ?: "")
                 emit(Resource.success(true))
             }else{
                 emit(Resource.error(response.message,false))

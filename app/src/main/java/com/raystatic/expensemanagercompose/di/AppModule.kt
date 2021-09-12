@@ -3,7 +3,7 @@ package com.raystatic.expensemanagercompose.di
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.raystatic.expensemanagercompose.util.ExpenseDatastorePreference
+import com.raystatic.expensemanagercompose.util.PrefManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,9 +29,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesExpenseDataStorePreference(
+    fun providesExpensePrefManager(
         @ApplicationContext context: Context
-    ) = ExpenseDatastorePreference(context = context)
+    ) = PrefManager(context = context)
 
 
 }

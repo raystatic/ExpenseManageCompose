@@ -11,12 +11,12 @@ import com.raystatic.expensemanagercompose.presentation.add_expenses.AddExpense
 import com.raystatic.expensemanagercompose.presentation.home.HomeScreen
 import com.raystatic.expensemanagercompose.presentation.login.LoginScreen
 import com.raystatic.expensemanagercompose.presentation.ui.theme.ExpenseManagerComposeTheme
-import com.raystatic.expensemanagercompose.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import com.raystatic.expensemanagercompose.presentation.splash.SplashScreen
+import com.raystatic.expensemanagercompose.util.PrefManager
 
 
 @AndroidEntryPoint
@@ -24,6 +24,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
+
+    @Inject
+    lateinit var prefManager: PrefManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +74,8 @@ class MainActivity : ComponentActivity() {
                             Screen.AddExpensesScreen.route
                         ){
                             AddExpense(
-                                navController = navController
+                                navController = navController,
+                                prefManager = prefManager
                             )
                         }
 

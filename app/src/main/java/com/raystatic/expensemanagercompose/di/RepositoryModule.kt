@@ -7,7 +7,7 @@ import com.raystatic.expensemanagercompose.data.repositories.ExpenseRepositoryIm
 import com.raystatic.expensemanagercompose.data.repositories.UserRepositoryImpl
 import com.raystatic.expensemanagercompose.domain.repositories.ExpenseRepository
 import com.raystatic.expensemanagercompose.domain.repositories.UserRepository
-import com.raystatic.expensemanagercompose.util.ExpenseDatastorePreference
+import com.raystatic.expensemanagercompose.util.PrefManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,9 +23,9 @@ object RepositoryModule {
     fun provideUserRepository(
         apiService: ApiService,
         userDao: UserDao,
-        datastorePreference: ExpenseDatastorePreference
+        prefManager: PrefManager
     ):UserRepository{
-        return UserRepositoryImpl(apiService,userDao, datastorePreference)
+        return UserRepositoryImpl(apiService,userDao, prefManager = prefManager)
     }
 
     @Singleton

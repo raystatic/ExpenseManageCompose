@@ -11,8 +11,8 @@ class AddExpenseUseCase @Inject constructor(
     private val expenseRepository: ExpenseRepository
 ) {
 
-    operator fun invoke(addExpenseRequest: AddExpenseRequest): Flow<Resource<Expense>> {
-        return expenseRepository.addExpense(addExpenseRequest = addExpenseRequest)
+    operator fun invoke(addExpenseRequest: AddExpenseRequest, token:String): Flow<Resource<Expense>> {
+        return expenseRepository.addExpense(addExpenseRequest = addExpenseRequest, token = token)
     }
 
 }
