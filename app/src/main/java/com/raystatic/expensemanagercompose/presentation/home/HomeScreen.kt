@@ -1,10 +1,8 @@
 package com.raystatic.expensemanagercompose.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -21,14 +19,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.raystatic.expensemanagercompose.R
 import com.raystatic.expensemanagercompose.domain.models.Expense
+import com.raystatic.expensemanagercompose.domain.models.MonthlyExpenseItem
 import com.raystatic.expensemanagercompose.presentation.Screen
+import com.raystatic.expensemanagercompose.presentation.common.Loader
 import com.raystatic.expensemanagercompose.presentation.home.components.DurationSelector
 import com.raystatic.expensemanagercompose.presentation.home.components.WelcomeCard
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
@@ -70,6 +69,9 @@ fun HomeScreen(
 
             val expenseListState = vm.expenseListState.value
 
+            val monthlyExpenses = vm.monthlyExpensesState.value
+
+            vm.getMonthlyExpense()
 
             if (expenseListState.error.isNotBlank()){
                 scope.launch {
@@ -130,45 +132,103 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                if (expensesFromLocal.isNotEmpty()){
+                when(selectedDuration){
+                    "Daily" -> {
+                        if (expensesFromLocal.isNotEmpty()){
+                            LazyColumn{
+                                itemsIndexed(expensesFromLocal){index: Int, item: Expense ->
+                                    val backgroundColor: Color
+                                    val highlightColor: Color
+                                    if (index%2 != 0){
+                                        backgroundColor = LightPurple
+                                        highlightColor = White
+                                    }else{
+                                        backgroundColor = LightPink
+                                        highlightColor = Black
+                                    }
 
-                    LazyColumn{
-                        itemsIndexed(expensesFromLocal){index: Int, item: Expense ->
-                            val backgroundColor: Color
-                            val highlightColor: Color
-                            if (index%2 != 0){
-                                backgroundColor = LightPurple
-                                highlightColor = White
-                            }else{
-                                backgroundColor = LightPink
-                                highlightColor = Black
-                            }
+                                    ExpensesItem(
+                                        backgroundColor = backgroundColor,
+                                        textColor = highlightColor,
+                                        expense = item,
+                                        onClick ={
 
-                            ExpensesItem(
-                                backgroundColor = backgroundColor,
-                                textColor = highlightColor,
-                                expensesItem = item,
-                                onClick ={
-
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.height(10.dp))
                                 }
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
+                            }
+                        }else{
+                            Box(modifier = Modifier.fillMaxSize()){
+                                Text(
+                                    text = "No expenses yet.",
+                                    style = TextStyle(
+                                        color = Black
+                                    ),
+                                    fontSize =  16.sp,
+                                    fontFamily = appFontFamily,
+                                    fontWeight = FontWeight.Medium,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
                         }
                     }
 
+                    "Monthly" -> {
 
-                }else{
-                    Box(modifier = Modifier.fillMaxSize()){
-                        Text(
-                            text = "No expenses yet.",
-                            style = TextStyle(
-                                color = Black
-                            ),
-                            fontSize =  16.sp,
-                            fontFamily = appFontFamily,
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
+//                        if (monthlyExpenses.isLoading){
+//                            Box(modifier = Modifier.fillMaxSize()){
+//                                Loader(
+//                                    modifier = Modifier
+//                                        .align(Alignment.Center)
+//                                ) {
+//
+//                                }
+//                            }
+//                        }
+
+                        monthlyExpenses.monthlyExpense?.let { monthly->
+                            if (monthly.isNotEmpty()){
+                                LazyColumn{
+                                    itemsIndexed(monthly){index: Int, item: MonthlyExpenseItem ->
+                                        val backgroundColor: Color
+                                        val highlightColor: Color
+                                        if (index%2 != 0){
+                                            backgroundColor = LightPurple
+                                            highlightColor = White
+                                        }else{
+                                            backgroundColor = LightPink
+                                            highlightColor = Black
+                                        }
+
+                                        ExpensesItem(
+                                            backgroundColor = backgroundColor,
+                                            textColor = highlightColor,
+                                            monthlyExpenseItem = item,
+                                            onClick ={
+
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.height(10.dp))
+                                    }
+                                }
+                            }else{
+                                Box(modifier = Modifier.fillMaxSize()){
+                                    Text(
+                                        text = "No expenses yet.",
+                                        style = TextStyle(
+                                            color = Black
+                                        ),
+                                        fontSize =  16.sp,
+                                        fontFamily = appFontFamily,
+                                        fontWeight = FontWeight.Medium,
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
+                            }
+                        }
+
+
                     }
                 }
 
@@ -181,11 +241,13 @@ fun HomeScreen(
 
 }
 
+
 @Composable
 fun ExpensesItem(
     backgroundColor: Color,
     textColor:Color,
-    expensesItem: Expense,
+    expense: Expense? =null,
+    monthlyExpenseItem: MonthlyExpenseItem ?= null,
     onClick:(Expense) -> Unit
 ){
 
@@ -195,7 +257,7 @@ fun ExpensesItem(
             .background(color = backgroundColor)
             .fillMaxWidth()
             .clickable {
-                onClick(expensesItem)
+                expense?.let { onClick(it) }
             }
     ){
         Row(
@@ -205,8 +267,9 @@ fun ExpensesItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
+                val title = expense?.title ?: monthlyExpenseItem?.month  ?: ""
                 Text(
-                    text = expensesItem.title,
+                    text = title,
                     style = TextStyle(
                         color = textColor
                     ),
@@ -215,8 +278,13 @@ fun ExpensesItem(
                     fontSize = 16.sp
                 )
 
+                val date = if (expense!=null){
+                    expense.date?.let { Utility.formatDate(it) } ?: Utility.formatDate(expense.updatedAt)
+                }else{
+                    monthlyExpenseItem?.duration ?: ""
+                }
                 Text(
-                    text = expensesItem.date?.let { Utility.formatDate(it) } ?: Utility.formatDate(expensesItem.updatedAt),
+                    text = date,
                     style = TextStyle(
                         color = textColor
                     ),
@@ -226,8 +294,10 @@ fun ExpensesItem(
                 )
             }
 
+            val amount = expense?.amount ?: monthlyExpenseItem?.amount
+
             Text(
-                text = "₹${expensesItem.amount}",
+                text = "₹${amount}",
                 style = TextStyle(
                     color = textColor
                 ),

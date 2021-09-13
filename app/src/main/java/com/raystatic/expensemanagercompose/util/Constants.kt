@@ -30,10 +30,6 @@ object Constants {
             selected = true
         ),
         DurationSelector(
-            title = "Weekly",
-            selected = false
-        ),
-        DurationSelector(
             title = "Monthly",
             selected = false
         )

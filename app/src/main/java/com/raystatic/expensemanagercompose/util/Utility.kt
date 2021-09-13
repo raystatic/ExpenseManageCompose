@@ -32,4 +32,12 @@ object Utility {
         return d.atStartOfDay().atOffset(ZoneOffset.UTC).format(df)
     }
 
+    fun getMonthFromDate(d:String): String {
+        return android.text.format.DateFormat.format("MMM", getDate(d)).toString()
+    }
+
+    fun getDateFromDate(d:String):String{
+        return android.text.format.DateFormat.format("dd", getDate(d)).toString()
+    }
+
 }
