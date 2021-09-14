@@ -8,6 +8,7 @@ import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetExpensesF
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetMonthlyExpensesUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.user.GetUserUseCase
 import com.raystatic.expensemanagercompose.util.Constants
+import com.raystatic.expensemanagercompose.util.Event
 import com.raystatic.expensemanagercompose.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -31,20 +32,20 @@ class HomeViewModel @Inject constructor(
         _selectedDuration.value = duration.title
     }
 
-    private val _expenseListState = mutableStateOf(ExpenseListState())
-    val expenseListState:State<ExpenseListState> get() = _expenseListState
+    private val _expenseListState = MutableLiveData<Event<ExpenseListState>>()
+    val expenseListState:LiveData<Event<ExpenseListState>> get() = _expenseListState
 
     fun getExpensesFromRemote(token:String){
         getExpensesFromRemoteUseCase(token = token).onEach {
             when(it.status){
                 Status.SUCCESS -> {
-                    _expenseListState.value = ExpenseListState(expensesUpdated = it.data == true)
+                    _expenseListState.value = Event(ExpenseListState(expensesUpdated = it.data == true))
                 }
                 Status.ERROR -> {
-                    _expenseListState.value = ExpenseListState(error = it.message ?: "An error occurred while syncing expenses")
+                    _expenseListState.value = Event(ExpenseListState(error = it.message ?: "An error occurred while syncing expenses"))
                 }
                 Status.LOADING -> {
-                    _expenseListState.value = ExpenseListState(isLoading = true)
+                    _expenseListState.value = Event(ExpenseListState(isLoading = true))
                 }
             }
         }.launchIn(viewModelScope)
@@ -53,22 +54,22 @@ class HomeViewModel @Inject constructor(
 
     fun getExpensesFromCache() = getExpensesFromCacheUseCase()
 
-    private val _monthlyExpensesState = mutableStateOf(MonthlyExpensesState())
-    val monthlyExpensesState:State<MonthlyExpensesState> get() = _monthlyExpensesState
+    private val _monthlyExpensesState = MutableLiveData<Event<MonthlyExpensesState>>()
+    val monthlyExpensesState:LiveData<Event<MonthlyExpensesState>> get() = _monthlyExpensesState
 
     fun getMonthlyExpense(){
         getMonthlyExpensesUseCase().onEach {
             when(it.status){
                 Status.SUCCESS -> {
-                    _monthlyExpensesState.value = MonthlyExpensesState(monthlyExpense = it.data ?: emptyList())
+                    _monthlyExpensesState.value = Event(MonthlyExpensesState(monthlyExpense = it.data ?: emptyList()))
                 }
 
                 Status.ERROR -> {
-                    _monthlyExpensesState.value = MonthlyExpensesState(error = it.message ?: Constants.UNKNOWN_ERROR)
+                    _monthlyExpensesState.value = Event(MonthlyExpensesState(error = it.message ?: Constants.UNKNOWN_ERROR))
                 }
 
                 Status.LOADING -> {
-                    _monthlyExpensesState.value = MonthlyExpensesState(isLoading = true)
+                    _monthlyExpensesState.value = Event(MonthlyExpensesState(isLoading = true))
                 }
             }
         }.launchIn(viewModelScope)

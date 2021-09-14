@@ -67,13 +67,13 @@ fun HomeScreen(
 
             val expensesFromLocal = vm.getExpensesFromCache().collectAsState(initial = emptyList()).value
 
-            val expenseListState = vm.expenseListState.value
+            val expenseListState = vm.expenseListState.observeAsState().value?.getContentIfNotHandled()
 
-            val monthlyExpenses = vm.monthlyExpensesState.value
+            val monthlyExpenses = vm.monthlyExpensesState.observeAsState().value?.getContentIfNotHandled()
 
             vm.getMonthlyExpense()
 
-            if (expenseListState.error.isNotBlank()){
+            if (expenseListState?.error?.isNotBlank() == true){
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = expenseListState.error
@@ -187,7 +187,7 @@ fun HomeScreen(
 //                            }
 //                        }
 
-                        monthlyExpenses.monthlyExpense?.let { monthly->
+                        monthlyExpenses?.monthlyExpense?.let { monthly->
                             if (monthly.isNotEmpty()){
                                 LazyColumn{
                                     itemsIndexed(monthly){index: Int, item: MonthlyExpenseItem ->
