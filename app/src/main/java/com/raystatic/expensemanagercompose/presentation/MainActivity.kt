@@ -3,6 +3,7 @@ package com.raystatic.expensemanagercompose.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,9 +17,11 @@ import javax.inject.Inject
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import com.raystatic.expensemanagercompose.presentation.splash.SplashScreen
+import com.raystatic.expensemanagercompose.util.Constants
 import com.raystatic.expensemanagercompose.util.PrefManager
 
 
+@ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -72,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(
-                            Screen.AddExpensesScreen.route
+                            Screen.AddExpensesScreen.route + "/{expense_id}"
                         ){
                             AddExpense(
                                 navController = navController,

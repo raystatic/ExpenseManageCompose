@@ -124,7 +124,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(10.dp)
                             .clickable {
-                                navController.navigate(Screen.AddExpensesScreen.route)
+                                navController.navigate(Screen.AddExpensesScreen.route + "/-1")
                             }
                     )
 
@@ -152,7 +152,7 @@ fun HomeScreen(
                                         textColor = highlightColor,
                                         expense = item,
                                         onClick ={
-
+                                            navController.navigate(Screen.AddExpensesScreen.route + "/${it.id}")
                                         }
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))

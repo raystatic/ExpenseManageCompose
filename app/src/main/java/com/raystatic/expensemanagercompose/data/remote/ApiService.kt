@@ -1,10 +1,7 @@
 package com.raystatic.expensemanagercompose.data.remote
 
 import com.raystatic.expensemanagercompose.data.remote.dto.*
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -24,5 +21,11 @@ interface ApiService {
     suspend fun getExpenses(
         @Header("auth-token") token: String
     ):GetExpensesResponse
+
+    @PATCH("expense/updateExpense")
+    suspend fun updateExpense(
+        @Header("auth-token") token: String,
+        @Body updateExpenseRequest: UpdateExpenseRequest
+    ): UpdateExpenseResponse
 
 }

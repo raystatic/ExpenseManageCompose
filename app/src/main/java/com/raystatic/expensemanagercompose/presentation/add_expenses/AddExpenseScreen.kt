@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.raystatic.expensemanagercompose.R
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
+import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
 import com.raystatic.expensemanagercompose.presentation.common.Loader
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
 import com.raystatic.expensemanagercompose.util.Constants
@@ -54,7 +56,33 @@ fun AddExpense(
             scaffoldState = scaffoldState,
         ) {
 
+            val expenseByIDFromCache = vm.expenseByIdFromCache.observeAsState().value?.getContentIfNotHandled()
 
+            val updateExpenseState = vm.updateExpenseState.value
+
+            if (updateExpenseState.isLoading){
+                Loader(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+
+                }
+            }
+
+            if (updateExpenseState.updated){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Updated successfully!",
+                    )
+                }
+            }
+
+            if (updateExpenseState.error.isNotBlank()){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = updateExpenseState.error,
+                    )
+                }
+            }
 
             val isAddRequestHandled = vm.isAddRequestHandled.value
 
@@ -90,8 +118,9 @@ fun AddExpense(
                 }
             }
 
-            val defaultTitle = ""
+            val defaultTitle =  ""
             val defaultAmount = 0f
+
 
             val expenseTitle = remember {
                 mutableStateOf(defaultTitle)
@@ -100,6 +129,23 @@ fun AddExpense(
             val expenseAmount = remember {
                 mutableStateOf(defaultAmount)
             }
+
+            val updatable = remember {
+                mutableStateOf(false)
+            }
+
+            val expenseId = remember {
+                mutableStateOf(-1)
+            }
+
+            if (expenseByIDFromCache!=null){
+                expenseTitle.value = expenseByIDFromCache.title
+                expenseAmount.value = expenseByIDFromCache.amount
+                expenseId.value = expenseByIDFromCache.id
+                updatable.value = true
+            }
+
+//            Log.d("TAGDEBUG", "AddExpense: update: ${expenseTitle.value} ${expenseAmount.value}")
 
             Column(
                 modifier = Modifier
@@ -168,7 +214,10 @@ fun AddExpense(
                     isNumerical = true,
                     textValue = if (expenseAmount.value == 0f) "" else expenseAmount.value.toString()
                 ){
-                    expenseAmount.value = it.toFloat()
+                    if (it.isNotBlank()){
+                        expenseAmount.value = it.toFloat()
+                    }
+
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -185,14 +234,25 @@ fun AddExpense(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                var selectedDate by remember {
-                    val localDate = LocalDate.now()
-                    mutableStateOf(Utility.formatDate(localDate.toString()))
-                }
-
                 var selectedDateInIso by remember {
                     mutableStateOf(Utility.getDateInIso(LocalDate.now()))
                 }
+
+                var selectedDate by remember {
+                    mutableStateOf(Utility.formatDate(LocalDate.now().toString()))
+
+                }
+
+                if (expenseByIDFromCache != null) {
+                    expenseByIDFromCache.date?.let {
+                        selectedDateInIso = it
+                        selectedDate = Utility.formatDate(it)
+                    } ?: kotlin.run {
+                        selectedDateInIso = expenseByIDFromCache.updatedAt
+                        selectedDate = Utility.formatDate(expenseByIDFromCache.updatedAt)
+                    }
+                }
+
 
                 val dialog = remember {
                     MaterialDialog()
@@ -259,12 +319,24 @@ fun AddExpense(
 
                         val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
                         if (token.isNotBlank()){
-                            val addExpenseRequest = AddExpenseRequest(
-                                title = expenseTitle.value,
-                                amount = expenseAmount.value,
-                                date = selectedDateInIso.toString()
-                            )
-                            vm.addExpense(addExpenseRequest = addExpenseRequest, token = token)
+
+                            if (updatable.value && expenseId.value != -1){
+                                val updateExpenseRequest = UpdateExpenseRequest(
+                                    title = expenseTitle.value,
+                                    amount = expenseAmount.value,
+                                    expenseId = expenseId.value,
+                                    date = selectedDateInIso
+                                )
+
+                                vm.updateExpense(token = token, updateExpenseRequest = updateExpenseRequest)
+                            }else{
+                                val addExpenseRequest = AddExpenseRequest(
+                                    title = expenseTitle.value,
+                                    amount = expenseAmount.value,
+                                    date = selectedDateInIso
+                                )
+                                vm.addExpense(addExpenseRequest = addExpenseRequest, token = token)
+                            }
                         }
                      }
 

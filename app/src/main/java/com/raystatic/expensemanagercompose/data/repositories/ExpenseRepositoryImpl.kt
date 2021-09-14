@@ -4,6 +4,7 @@ import com.raystatic.expensemanagercompose.data.local.dao.ExpenseDao
 import com.raystatic.expensemanagercompose.data.remote.ApiService
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
 import com.raystatic.expensemanagercompose.data.remote.dto.ExpenseDTO
+import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
 import com.raystatic.expensemanagercompose.data.remote.dto.toExpense
 import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.domain.models.MonthlyExpenseItem
@@ -24,6 +25,38 @@ class ExpenseRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val expenseDao: ExpenseDao
 ): ExpenseRepository{
+
+    override suspend fun getExpenseByIdFromCache(id:Int): Expense {
+        return expenseDao.getExpenseById(id)
+    }
+
+    override fun updateExpense(
+        token: String,
+        updateExpenseRequest: UpdateExpenseRequest
+    ): Flow<Resource<Boolean>>  = flow{
+        try {
+            emit(Resource.loading(false))
+            val response = apiService.updateExpense(token = token,updateExpenseRequest = updateExpenseRequest)
+            if (!response.error){
+                expenseDao.updateExpense(
+                    title = updateExpenseRequest.title,
+                    amount = updateExpenseRequest.amount,
+                    date = updateExpenseRequest.date,
+                    expenseId = updateExpenseRequest.expenseId
+                )
+                emit(Resource.success(true))
+            }else{
+                emit(Resource.error(response.message,false))
+            }
+
+        }catch (e:HttpException){
+            e.printStackTrace()
+            emit(Resource.error(Constants.SOMETHING_WENT_WRONG,false))
+        }catch (e: IOException){
+            e.printStackTrace()
+            emit(Resource.error(Constants.CHECK_INTERNET_ERROR, false))
+        }
+    }
 
     override fun getExpensesFromCache(): Flow<List<Expense>> {
         return expenseDao.getAllExpensesFlow()

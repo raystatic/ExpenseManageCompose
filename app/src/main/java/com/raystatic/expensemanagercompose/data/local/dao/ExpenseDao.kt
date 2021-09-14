@@ -16,10 +16,16 @@ interface ExpenseDao {
     @Query("SELECT * FROM expenses ORDER BY date DESC")
     fun getAllExpensesFlow(): Flow<List<Expense>>
 
+    @Query("SELECT * FROM expenses WHERE id=:expenseId")
+    suspend fun getExpenseById(expenseId: Int): Expense
+
     @Query("SELECT * FROM expenses ORDER BY date DESC")
     suspend fun getAllExpenses(): List<Expense>
 
     @Query("DELETE FROM expenses where id=:expenseId")
     suspend fun deleteExpenseById(expenseId:Int)
+
+    @Query("UPDATE expenses SET title=:title, amount=:amount, date=:date WHERE id=:expenseId")
+    suspend fun updateExpense(title:String, amount:Float,date:String, expenseId: Int)
 
 }

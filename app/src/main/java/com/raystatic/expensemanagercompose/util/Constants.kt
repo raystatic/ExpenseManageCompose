@@ -20,9 +20,6 @@ object Constants {
     const val KEY_PREF_NAME = "ExpenseManagerSharedPreferences"
 
     const val USERTOKENKEY = "user_token_key"
-    const val USERNAMEKEY = "user_name_key"
-    const val USEREMAILKEY = "user_email_key"
-    const val USERAVATARKEY = "user_avatar_key"
 
     val defaultDurationList = listOf(
         DurationSelector(
@@ -34,5 +31,7 @@ object Constants {
             selected = false
         )
     )
+
+    const val EXPENSE_ID = "expense_id"
 
 }

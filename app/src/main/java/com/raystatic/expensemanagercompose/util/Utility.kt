@@ -27,7 +27,6 @@ object Utility {
     }
 
     fun getDateInIso(d: LocalDate): String {
-
         val df = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'")
         return d.atStartOfDay().atOffset(ZoneOffset.UTC).format(df)
     }

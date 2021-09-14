@@ -87,7 +87,7 @@ fun LoginScreen(
             ) {
 
                 Text(
-                    text = "Welcome!\nYou are just one tap away.",
+                    text = "Hello there!\nYou are just one tap away.",
                     fontWeight = FontWeight.Medium,
                     style = TextStyle(
                         color = Black,
