@@ -65,16 +65,9 @@ fun SplashScreen(
         }
         val user = vm.user.observeAsState().value
 
+        val waiting = vm.waiting.observeAsState().value
 
-        var userObserverCounter by remember {
-            mutableStateOf(0)
-        }
-
-        if (user == null && userObserverCounter < 10){
-            Log.d("TAGDEBUG", "SplashScreen: $userObserverCounter |  $user")
-            userObserverCounter++
-        }else{
-
+        if (waiting == 100){
             user?.let {
 
                 val loginRequestBody = LoginRequestBody(

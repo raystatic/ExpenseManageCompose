@@ -2,9 +2,7 @@ package com.raystatic.expensemanagercompose.presentation.splash
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.raystatic.expensemanagercompose.data.remote.dto.LoginRequestBody
 import com.raystatic.expensemanagercompose.data.repositories.UserRepositoryImpl
 import com.raystatic.expensemanagercompose.domain.models.User
@@ -16,6 +14,7 @@ import com.raystatic.expensemanagercompose.util.Resource
 import com.raystatic.expensemanagercompose.util.SingleLiveEvent
 import com.raystatic.expensemanagercompose.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,6 +28,19 @@ class SplashViewModel @Inject constructor(
 ):ViewModel() {
 
     val user = getUserUseCase().asLiveData()
+
+    private val _waiting = MutableLiveData<Int>(0)
+    val waiting:LiveData<Int> get() = _waiting
+
+    init {
+        viewModelScope.launch {
+            for (i in 0 until 100){
+                delay(20)
+                val w = _waiting.value
+                _waiting.postValue(w?.plus(1))
+            }
+        }
+    }
 
     private val _userAuthState = mutableStateOf(SplashAuthState())
     val userAuthState:State<SplashAuthState> get() = _userAuthState
