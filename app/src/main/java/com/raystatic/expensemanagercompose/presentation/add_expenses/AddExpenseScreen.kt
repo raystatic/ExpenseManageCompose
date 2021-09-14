@@ -58,9 +58,9 @@ fun AddExpense(
 
             val expenseByIDFromCache = vm.expenseByIdFromCache.observeAsState().value?.getContentIfNotHandled()
 
-            val updateExpenseState = vm.updateExpenseState.value
+            val updateExpenseState = vm.updateExpenseState.observeAsState().value?.getContentIfNotHandled()
 
-            if (updateExpenseState.isLoading){
+            if (updateExpenseState?.isLoading == true){
                 Loader(
                     modifier = Modifier.align(Alignment.Center)
                 ) {
@@ -68,7 +68,7 @@ fun AddExpense(
                 }
             }
 
-            if (updateExpenseState.updated){
+            if (updateExpenseState?.updated == true){
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = "Updated successfully!",
@@ -76,7 +76,7 @@ fun AddExpense(
                 }
             }
 
-            if (updateExpenseState.error.isNotBlank()){
+            if (updateExpenseState?.error?.isNotBlank() == true){
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = updateExpenseState.error,
@@ -84,37 +84,30 @@ fun AddExpense(
                 }
             }
 
-            val isAddRequestHandled = vm.isAddRequestHandled.value
+            val addExpenseState = vm.addExpenseState.observeAsState().value?.getContentIfNotHandled()
 
-            if (!isAddRequestHandled){
-
-                val addExpenseState = vm.addExpenseState.value
-
-                if (addExpenseState.error.isNotBlank()){
-                    vm.setIsAddRequestHandled(true)
-                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = addExpenseState.error,
-                        )
-                    }
+            if (addExpenseState?.error?.isNotBlank() == true){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = addExpenseState.error,
+                    )
                 }
+            }
 
-                if (addExpenseState.addedExpense!=null){
-                    vm.setIsAddRequestHandled(true)
-                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = "New expense added",
-                        )
-                    }
-                    navController.navigateUp()
+            if (addExpenseState?.addedExpense!=null){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "New expense added",
+                    )
                 }
+                navController.navigateUp()
+            }
 
-                if (addExpenseState.isLoading){
-                    Loader(
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
+            if (addExpenseState?.isLoading == true){
+                Loader(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
 
-                    }
                 }
             }
 
@@ -145,7 +138,6 @@ fun AddExpense(
                 updatable.value = true
             }
 
-//            Log.d("TAGDEBUG", "AddExpense: update: ${expenseTitle.value} ${expenseAmount.value}")
 
             Column(
                 modifier = Modifier
@@ -301,8 +293,6 @@ fun AddExpense(
                     RoundedButton(
                         text = "Submit",
                     ) {
-                        vm.setIsAddRequestHandled(false)
-
                         if (expenseTitle.value.isEmpty()){
                             scope.launch {
                                 scaffoldState.snackbarHostState.showSnackbar("Title cannot be empty")

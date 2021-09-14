@@ -27,14 +27,10 @@ class AddExpenseViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    private val _isAddRequestHandled = mutableStateOf(false)
-    val isAddRequestHandled: State<Boolean> get() = _isAddRequestHandled
-
     private val _expenseByIdFromCache = SingleLiveEvent<Event<Expense>>()
     val expenseByIdFromCache:SingleLiveEvent<Event<Expense>> get() = _expenseByIdFromCache
 
     init {
-        _isAddRequestHandled.value = false
         savedStateHandle.get<String>(Constants.EXPENSE_ID)?.let {
             if (it.toInt() != -1){
                 getExpenseFromCache(id = it.toInt())
@@ -46,47 +42,43 @@ class AddExpenseViewModel @Inject constructor(
         _expenseByIdFromCache.value = Event(getExpenseByIdFromCache(id))
     }
 
-    fun setIsAddRequestHandled(b:Boolean){
-        _isAddRequestHandled.value = b
-    }
-
-    private val _addExpenseState = mutableStateOf(AddExpenseState())
-    val addExpenseState:State<AddExpenseState> get() = _addExpenseState
+    private val _addExpenseState = MutableLiveData<Event<AddExpenseState>>()
+    val addExpenseState:LiveData<Event<AddExpenseState>> get() = _addExpenseState
 
     fun addExpense(addExpenseRequest: AddExpenseRequest, token:String){
         addExpenseUseCase(addExpenseRequest, token = token).onEach {
             when(it.status){
                 Status.SUCCESS -> {
-                    _addExpenseState.value = AddExpenseState(addedExpense = it.data)
+                    _addExpenseState.value = Event(AddExpenseState(addedExpense = it.data))
                 }
 
                 Status.ERROR -> {
-                    _addExpenseState.value = AddExpenseState(error = it.message ?: Constants.UNKNOWN_ERROR)
+                    _addExpenseState.value = Event(AddExpenseState(error = it.message ?: Constants.UNKNOWN_ERROR))
                 }
 
                 Status.LOADING -> {
-                    _addExpenseState.value = AddExpenseState(isLoading = true)
+                    _addExpenseState.value = Event(AddExpenseState(isLoading = true))
                 }
             }
         }.launchIn(viewModelScope)
     }
 
-    private val _updateExpenseState = mutableStateOf(UpdateExpenseState())
-    val updateExpenseState:State<UpdateExpenseState> get() = _updateExpenseState
+    private val _updateExpenseState = MutableLiveData<Event<UpdateExpenseState>>()
+    val updateExpenseState:LiveData<Event<UpdateExpenseState>> get() = _updateExpenseState
 
     fun updateExpense(token:String, updateExpenseRequest:UpdateExpenseRequest){
         updateExpenseUseCase(token = token, updateExpenseRequest = updateExpenseRequest).onEach {
             when(it.status){
                 Status.SUCCESS -> {
-                    _updateExpenseState.value = UpdateExpenseState(updated = true)
+                    _updateExpenseState.value = Event(UpdateExpenseState(updated = true))
                 }
 
                 Status.ERROR -> {
-                    _updateExpenseState.value = UpdateExpenseState(error = it.message ?: Constants.UNKNOWN_ERROR)
+                    _updateExpenseState.value = Event(UpdateExpenseState(error = it.message ?: Constants.UNKNOWN_ERROR))
                 }
 
                 Status.LOADING -> {
-                    _updateExpenseState.value = UpdateExpenseState(isLoading = true)
+                    _updateExpenseState.value = Event(UpdateExpenseState(isLoading = true))
                 }
             }
         }.launchIn(viewModelScope)
