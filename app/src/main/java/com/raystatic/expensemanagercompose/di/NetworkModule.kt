@@ -22,7 +22,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBaseUrl() = Constants.DEBUG_BASE_URL
+    fun provideBaseUrl() = Constants.PROD_BASE_URL
 
     @Singleton
     @Provides

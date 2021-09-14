@@ -32,9 +32,10 @@ object RepositoryModule {
     @Provides
     fun provideExpenseRepository(
         apiService: ApiService,
-        expenseDao: ExpenseDao
+        expenseDao: ExpenseDao,
+        prefManager: PrefManager
     ):ExpenseRepository{
-        return ExpenseRepositoryImpl(apiService,expenseDao)
+        return ExpenseRepositoryImpl(apiService,expenseDao, prefManager = prefManager)
     }
 
 }

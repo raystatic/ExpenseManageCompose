@@ -12,6 +12,7 @@ import com.raystatic.expensemanagercompose.domain.models.toExpenseItem
 import com.raystatic.expensemanagercompose.domain.repositories.ExpenseRepository
 import com.raystatic.expensemanagercompose.presentation.home.ExpensesItem
 import com.raystatic.expensemanagercompose.util.Constants
+import com.raystatic.expensemanagercompose.util.PrefManager
 import com.raystatic.expensemanagercompose.util.Resource
 import com.raystatic.expensemanagercompose.util.Utility
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 class ExpenseRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val expenseDao: ExpenseDao
+    private val expenseDao: ExpenseDao,
+    private val prefManager: PrefManager
 ): ExpenseRepository{
 
     override suspend fun getExpenseByIdFromCache(id:Int): Expense {
@@ -101,20 +103,26 @@ class ExpenseRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getExpenses(token: String): Flow<Resource<Boolean>>  = flow{
+    override fun getExpenses(): Flow<Resource<Boolean>>  = flow{
         try {
-            val response = apiService.getExpenses(token = token)
-            if (!response.error){
-                response.data?.let { list: List<ExpenseDTO> ->
-                    for ( i in list){
-                        val expenseItem = i.toExpense()
-                        expenseDao.insert(expenseItem)
+            val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
+            if (token.isNotEmpty()){
+                val response = apiService.getExpenses(token = token)
+                if (!response.error){
+                    response.data?.let { list: List<ExpenseDTO> ->
+                        for ( i in list){
+                            val expenseItem = i.toExpense()
+                            expenseDao.insert(expenseItem)
+                        }
+                        emit(Resource.success(true))
                     }
-                    emit(Resource.success(true))
+                }else{
+                    emit(Resource.error(response.message, false))
                 }
             }else{
-                emit(Resource.error(response.message, false))
+                emit(Resource.error(Constants.SOMETHING_WENT_WRONG, false))
             }
+
         }catch (e:HttpException){
             e.printStackTrace()
             emit(Resource.error("${Constants.SOMETHING_WENT_WRONG} while syncing expenses",false))

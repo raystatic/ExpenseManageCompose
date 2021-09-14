@@ -9,8 +9,8 @@ class GetExpensesFromRemoteUseCase @Inject constructor(
     private val expenseRepository: ExpenseRepository
 ) {
 
-    operator fun invoke(token:String):Flow<Resource<Boolean>>{
-        return expenseRepository.getExpenses(token = token)
+    operator fun invoke():Flow<Resource<Boolean>>{
+        return expenseRepository.getExpenses()
     }
 
 }

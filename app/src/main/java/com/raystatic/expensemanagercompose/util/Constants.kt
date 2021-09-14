@@ -14,6 +14,7 @@ object Constants {
     const val UNKNOWN_ERROR = "An unknown error occurred"
 
     const val DEBUG_BASE_URL = "https://expensemanagercompose.herokuapp.com/api/"
+    const val PROD_BASE_URL = "http://139.59.48.239/api/"
 
     const val ExpenseManagerDB = "ExpenseManagerDB"
 

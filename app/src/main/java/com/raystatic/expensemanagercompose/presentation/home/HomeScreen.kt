@@ -81,13 +81,6 @@ fun HomeScreen(
                 }
             }
 
-            val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
-
-            if (token.isNotBlank()){
-                vm.getExpensesFromRemote(token = token)
-            }
-
-
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {

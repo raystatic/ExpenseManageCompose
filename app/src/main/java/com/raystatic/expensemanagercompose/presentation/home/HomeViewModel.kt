@@ -25,6 +25,10 @@ class HomeViewModel @Inject constructor(
 
     val user = getUserUseCase().asLiveData()
 
+    init {
+        getExpensesFromRemote()
+    }
+
     private val _selectedDuration = mutableStateOf("Daily")
     val selectedDuration:State<String> get() = _selectedDuration
 
@@ -35,8 +39,8 @@ class HomeViewModel @Inject constructor(
     private val _expenseListState = MutableLiveData<Event<ExpenseListState>>()
     val expenseListState:LiveData<Event<ExpenseListState>> get() = _expenseListState
 
-    fun getExpensesFromRemote(token:String){
-        getExpensesFromRemoteUseCase(token = token).onEach {
+    private fun getExpensesFromRemote(){
+        getExpensesFromRemoteUseCase().onEach {
             when(it.status){
                 Status.SUCCESS -> {
                     _expenseListState.value = Event(ExpenseListState(expensesUpdated = it.data == true))

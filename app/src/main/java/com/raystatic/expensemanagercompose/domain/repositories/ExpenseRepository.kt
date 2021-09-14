@@ -13,7 +13,7 @@ interface ExpenseRepository {
 
     fun addExpense(addExpenseRequest: AddExpenseRequest, token:String): Flow<Resource<Expense>>
 
-    fun getExpenses(token: String):Flow<Resource<Boolean>>
+    fun getExpenses():Flow<Resource<Boolean>>
 
     fun getExpensesFromCache():Flow<List<Expense>>
 
