@@ -54,21 +54,21 @@ fun LoginScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        val loginState = vm.loginAuthState.value
+        val loginState = vm.loginAuthState.observeAsState().value?.getContentIfNotHandled()
 
 
-        if (loginState.success){
+        if (loginState?.success == true){
             navController.popBackStack()
             navController.navigate(Constants.HOME_SCREEN)
         }
 
-        if (loginState.error.isNotBlank()){
+        if (loginState?.error?.isNotBlank() == true){
             scope.launch {
                 scaffoldState.snackbarHostState.showSnackbar(loginState.error)
             }
         }
 
-        if (loginState.isLoading){
+        if (loginState?.isLoading  == true){
             Loader(modifier = Modifier.align(Alignment.Center)) {
 
             }
