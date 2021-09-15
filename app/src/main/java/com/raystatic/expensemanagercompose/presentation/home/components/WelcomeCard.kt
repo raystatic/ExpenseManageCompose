@@ -20,11 +20,12 @@ import com.raystatic.expensemanagercompose.presentation.ui.theme.appFontFamily
 
 @Composable
 fun WelcomeCard(
-    userName:String
+    userName:String,
+    modifier: Modifier
 ){
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .wrapContentHeight()

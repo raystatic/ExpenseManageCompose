@@ -23,4 +23,6 @@ interface ExpenseRepository {
 
     suspend fun getExpenseByIdFromCache(id:Int):Expense
 
+    fun getExpensesByMonth(month:String):Flow<Resource<List<Expense>?>>
+
 }

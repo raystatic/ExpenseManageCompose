@@ -20,7 +20,7 @@ interface ExpenseDao {
     suspend fun getExpenseById(expenseId: Int): Expense
 
     @Query("SELECT * FROM expenses ORDER BY date DESC")
-    suspend fun getAllExpenses(): List<Expense>
+    suspend fun getAllExpenses(): List<Expense>?
 
     @Query("DELETE FROM expenses where id=:expenseId")
     suspend fun deleteExpenseById(expenseId:Int)

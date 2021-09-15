@@ -1,13 +1,12 @@
 package com.raystatic.expensemanagercompose.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -27,20 +26,18 @@ import com.raystatic.expensemanagercompose.R
 import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.domain.models.MonthlyExpenseItem
 import com.raystatic.expensemanagercompose.presentation.Screen
-import com.raystatic.expensemanagercompose.presentation.common.Loader
 import com.raystatic.expensemanagercompose.presentation.home.components.DurationSelector
 import com.raystatic.expensemanagercompose.presentation.home.components.WelcomeCard
 import com.raystatic.expensemanagercompose.presentation.ui.theme.*
 import com.raystatic.expensemanagercompose.util.Constants
-import com.raystatic.expensemanagercompose.util.PrefManager
 import com.raystatic.expensemanagercompose.util.Utility
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
     navController: NavController,
-    prefManager: PrefManager,
     vm: HomeViewModel = hiltViewModel()
 ) {
 
@@ -69,9 +66,7 @@ fun HomeScreen(
 
             val expenseListState = vm.expenseListState.observeAsState().value?.getContentIfNotHandled()
 
-            val monthlyExpenses = vm.monthlyExpensesState.observeAsState().value?.getContentIfNotHandled()
-
-            vm.getMonthlyExpense()
+            val monthlyExpenses = vm.monthlyExpensesState.observeAsState().value?.peekContent()
 
             if (expenseListState?.error?.isNotBlank() == true){
                 scope.launch {
@@ -81,22 +76,27 @@ fun HomeScreen(
                 }
             }
 
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Column{
 
-                WelcomeCard(userName = user?.name ?: "")
+                WelcomeCard(
+                    userName = user?.name ?: "",
+                    modifier = Modifier.padding(16.dp)
+                )
 
                 Spacer(modifier = Modifier.height(10.dp))
-                DurationSelector(durationSelectors = durations){
+                DurationSelector(
+                    durationSelectors = durations,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                ){
                     vm.setSelectedDuration(it)
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
@@ -123,12 +123,13 @@ fun HomeScreen(
 
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
 
                 when(selectedDuration){
                     "Daily" -> {
                         if (expensesFromLocal.isNotEmpty()){
-                            LazyColumn{
+                            LazyColumn(
+                                contentPadding = PaddingValues(16.dp)
+                            ){
                                 itemsIndexed(expensesFromLocal){index: Int, item: Expense ->
                                     val backgroundColor: Color
                                     val highlightColor: Color
@@ -146,6 +147,9 @@ fun HomeScreen(
                                         expense = item,
                                         onClick ={
                                             navController.navigate(Screen.AddExpensesScreen.route + "/${it.id}")
+                                        },
+                                        onMonthlyClick = {
+
                                         }
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
@@ -169,58 +173,80 @@ fun HomeScreen(
 
                     "Monthly" -> {
 
-//                        if (monthlyExpenses.isLoading){
-//                            Box(modifier = Modifier.fillMaxSize()){
-//                                Loader(
-//                                    modifier = Modifier
-//                                        .align(Alignment.Center)
-//                                ) {
-//
-//                                }
-//                            }
-//                        }
+                        val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+                            bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
+                        )
 
-                        monthlyExpenses?.monthlyExpense?.let { monthly->
-                            if (monthly.isNotEmpty()){
-                                LazyColumn{
-                                    itemsIndexed(monthly){index: Int, item: MonthlyExpenseItem ->
-                                        val backgroundColor: Color
-                                        val highlightColor: Color
-                                        if (index%2 != 0){
-                                            backgroundColor = LightPurple
-                                            highlightColor = White
-                                        }else{
-                                            backgroundColor = LightPink
-                                            highlightColor = Black
-                                        }
+                        BottomSheetScaffold(
+                            scaffoldState = bottomSheetScaffoldState,
+                            sheetContent ={
+                                val expensesByMonth = vm.expensesOfMonth.observeAsState().value
+                                BottomSheetContent(
+                                    expenses = expensesByMonth?.monthWiseExpense,
+                                    backgroundColor = expensesByMonth?.backgroundColor,
+                                    textColor = expensesByMonth?.textColor,
+                                    variantColor = expensesByMonth?.variantColor
+                                )
 
-                                        ExpensesItem(
-                                            backgroundColor = backgroundColor,
-                                            textColor = highlightColor,
-                                            monthlyExpenseItem = item,
-                                            onClick ={
-
+                            },
+                            sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+                            sheetElevation = 10.dp,
+                            sheetPeekHeight = 0.dp,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            monthlyExpenses?.monthlyExpense?.let { monthly->
+                                if (monthly.isNotEmpty()){
+                                    LazyColumn(
+                                        contentPadding = PaddingValues(16.dp)
+                                    ){
+                                        itemsIndexed(monthly){index: Int, item: MonthlyExpenseItem ->
+                                            val backgroundColor: Color
+                                            val highlightColor: Color
+                                            if (index%2 != 0){
+                                                backgroundColor = LightPurple
+                                                highlightColor = White
+                                            }else{
+                                                backgroundColor = LightPink
+                                                highlightColor = Black
                                             }
-                                        )
-                                        Spacer(modifier = Modifier.height(10.dp))
+
+                                            ExpensesItem(
+                                                backgroundColor = backgroundColor,
+                                                textColor = highlightColor,
+                                                monthlyExpenseItem = item,
+                                                onClick ={
+
+                                                },
+                                                onMonthlyClick = {
+                                                    vm.getExpensesByMonth(it.month, index = index)
+                                                    scope.launch {
+                                                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+                                                            bottomSheetScaffoldState.bottomSheetState.expand()
+                                                        }else{
+                                                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                            Spacer(modifier = Modifier.height(10.dp))
+                                        }
                                     }
-                                }
-                            }else{
-                                Box(modifier = Modifier.fillMaxSize()){
-                                    Text(
-                                        text = "No expenses yet.",
-                                        style = TextStyle(
-                                            color = Black
-                                        ),
-                                        fontSize =  16.sp,
-                                        fontFamily = appFontFamily,
-                                        fontWeight = FontWeight.Medium,
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
+                                }else{
+                                    Box(modifier = Modifier.fillMaxSize()){
+                                        Text(
+                                            text = "No expenses yet.",
+                                            style = TextStyle(
+                                                color = Black
+                                            ),
+                                            fontSize =  16.sp,
+                                            fontFamily = appFontFamily,
+                                            fontWeight = FontWeight.Medium,
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                    }
                                 }
                             }
                         }
-
 
                     }
                 }
@@ -236,12 +262,86 @@ fun HomeScreen(
 
 
 @Composable
+fun BottomSheetContent(
+    expenses:List<Expense>?=null,
+    backgroundColor: Color? ,
+    textColor: Color? ,
+    variantColor: Color?
+){
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = backgroundColor ?: LightPurple )
+        .padding(10.dp)
+    ){
+        expenses?.let {list->
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ){
+                itemsIndexed(list){index:Int,item: Expense ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column{
+                            Text(
+                                text = item.title,
+                                style = TextStyle(
+                                    color = textColor ?: White
+                                ),
+                                fontFamily = appFontFamily,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp
+                            )
+
+                            Text(
+                                text = Utility.formatDate(item.date ?: item.updatedAt),
+                                style = TextStyle(
+                                    color = textColor ?: White
+                                ),
+                                fontFamily = appFontFamily,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 10.sp
+                            )
+                        }
+
+                        Text(
+                            text = "₹${item.amount}",
+                            style = TextStyle(
+                                color = textColor ?: White
+                            ),
+                            fontFamily = appFontFamily,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp
+                        )
+
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    if (index < list.size - 1){
+                        Divider(color = variantColor ?: LightPurpleLightVariant,thickness = 1.dp)
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+
+                }
+            }
+        }
+    }
+
+
+}
+
+@Composable
 fun ExpensesItem(
     backgroundColor: Color,
     textColor:Color,
     expense: Expense? =null,
     monthlyExpenseItem: MonthlyExpenseItem ?= null,
-    onClick:(Expense) -> Unit
+    onClick:(Expense) -> Unit,
+    onMonthlyClick:(MonthlyExpenseItem) -> Unit
 ){
 
     Box(
@@ -250,7 +350,11 @@ fun ExpensesItem(
             .background(color = backgroundColor)
             .fillMaxWidth()
             .clickable {
-                expense?.let { onClick(it) }
+                if (expense != null) {
+                    onClick(expense)
+                } else if (monthlyExpenseItem != null) {
+                    onMonthlyClick(monthlyExpenseItem)
+                }
             }
     ){
         Row(

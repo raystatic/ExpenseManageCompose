@@ -21,6 +21,7 @@ import com.raystatic.expensemanagercompose.util.Constants
 import com.raystatic.expensemanagercompose.util.PrefManager
 
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,9 +39,6 @@ class MainActivity : ComponentActivity() {
             ExpenseManagerComposeTheme {
                 val navController = rememberNavController()
                 // A surface container using the 'background' color from the theme
-
-                val scaffoldState = rememberScaffoldState()
-                val coroutineScope = rememberCoroutineScope()
 
                 Surface(color = MaterialTheme.colors.background) {
                     NavHost(
@@ -69,8 +67,7 @@ class MainActivity : ComponentActivity() {
                             route = Screen.HomeScreen.route
                         ){
                             HomeScreen(
-                                navController = navController,
-                                prefManager = prefManager
+                                navController = navController
                             )
                         }
 

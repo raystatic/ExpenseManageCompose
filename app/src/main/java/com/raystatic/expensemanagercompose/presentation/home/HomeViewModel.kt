@@ -1,12 +1,16 @@
 package com.raystatic.expensemanagercompose.presentation.home
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.*
+import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetExpensesByMonthUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetExpensesFromCacheUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetExpensesFromRemoteUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetMonthlyExpensesUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.user.GetUserUseCase
+import com.raystatic.expensemanagercompose.presentation.ui.theme.*
 import com.raystatic.expensemanagercompose.util.Constants
 import com.raystatic.expensemanagercompose.util.Event
 import com.raystatic.expensemanagercompose.util.Status
@@ -20,14 +24,11 @@ class HomeViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getExpensesFromRemoteUseCase:GetExpensesFromRemoteUseCase,
     private val getExpensesFromCacheUseCase: GetExpensesFromCacheUseCase,
-    private val getMonthlyExpensesUseCase:GetMonthlyExpensesUseCase
+    private val getMonthlyExpensesUseCase:GetMonthlyExpensesUseCase,
+    private val getExpensesByMonthUseCase: GetExpensesByMonthUseCase
 ) : ViewModel() {
 
     val user = getUserUseCase().asLiveData()
-
-    init {
-        getExpensesFromRemote()
-    }
 
     private val _selectedDuration = mutableStateOf("Daily")
     val selectedDuration:State<String> get() = _selectedDuration
@@ -61,7 +62,7 @@ class HomeViewModel @Inject constructor(
     private val _monthlyExpensesState = MutableLiveData<Event<MonthlyExpensesState>>()
     val monthlyExpensesState:LiveData<Event<MonthlyExpensesState>> get() = _monthlyExpensesState
 
-    fun getMonthlyExpense(){
+    private fun getMonthlyExpense(){
         getMonthlyExpensesUseCase().onEach {
             when(it.status){
                 Status.SUCCESS -> {
@@ -79,6 +80,49 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    private val _expensesOfMonth = MutableLiveData<MonthWiseExpenseState>()
+    val expensesOfMonth:LiveData<MonthWiseExpenseState> get() = _expensesOfMonth
+
+    fun getExpensesByMonth(month:String, index:Int){
+        Log.d("TAGDEBUG", "expenseByMonth vm: ${month}")
+        getExpensesByMonthUseCase(month = month).onEach {
+            when(it.status){
+                Status.SUCCESS -> {
+                    val backgroundColor: Color
+                    val textColor: Color
+                    val variantColor: Color
+                    if (index%2 != 0){
+                        backgroundColor = LightPurple
+                        textColor = White
+                        variantColor = LightPurpleLightVariant
+                    }else{
+                        backgroundColor = LightPink
+                        textColor = Black
+                        variantColor = LightPinkLightVariant
+                    }
+                    _expensesOfMonth.value = MonthWiseExpenseState(
+                        monthWiseExpense = it.data,
+                        backgroundColor = backgroundColor,
+                        textColor = textColor,
+                        variantColor = variantColor
+                    )
+                }
+
+                Status.ERROR -> {
+                    _expensesOfMonth.value = MonthWiseExpenseState(error = it.message ?: Constants.UNKNOWN_ERROR)
+                }
+
+                Status.LOADING -> {
+                    _expensesOfMonth.value = MonthWiseExpenseState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    init {
+        getExpensesFromRemote()
+        getMonthlyExpense()
+    }
 
 
 }

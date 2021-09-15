@@ -17,11 +17,12 @@ import com.raystatic.expensemanagercompose.presentation.ui.theme.Black
 @Composable
 fun DurationSelector(
     durationSelectors:List<DurationSelector>,
+    modifier: Modifier,
     onSelectDuration:(DurationSelector) -> Unit
 ){
     Log.d("TAGDEBUG", "HomeScreen item: $durationSelectors")
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .background(color = Black)

@@ -1,5 +1,6 @@
 package com.raystatic.expensemanagercompose.data.repositories
 
+import android.util.Log
 import com.raystatic.expensemanagercompose.data.local.dao.ExpenseDao
 import com.raystatic.expensemanagercompose.data.remote.ApiService
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
@@ -8,15 +9,12 @@ import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
 import com.raystatic.expensemanagercompose.data.remote.dto.toExpense
 import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.domain.models.MonthlyExpenseItem
-import com.raystatic.expensemanagercompose.domain.models.toExpenseItem
 import com.raystatic.expensemanagercompose.domain.repositories.ExpenseRepository
-import com.raystatic.expensemanagercompose.presentation.home.ExpensesItem
 import com.raystatic.expensemanagercompose.util.Constants
 import com.raystatic.expensemanagercompose.util.PrefManager
 import com.raystatic.expensemanagercompose.util.Resource
 import com.raystatic.expensemanagercompose.util.Utility
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import retrofit2.HttpException
 import java.io.IOException
 import java.lang.Exception
@@ -27,6 +25,24 @@ class ExpenseRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val prefManager: PrefManager
 ): ExpenseRepository{
+
+    override fun getExpensesByMonth(month: String): Flow<Resource<List<Expense>?>> = flow {
+        try {
+            emit(Resource.loading(null))
+            expenseDao.getAllExpensesFlow()
+                .collect {
+                    Log.d("TAGDEBUG", "expenseByMonth: ${it.size}")
+                    val currentExpenses = it
+                    val monthWiseList = currentExpenses.groupBy {
+                        Utility.getMonthFromDate(it.date ?: it.updatedAt)
+                    }
+                    emit(Resource.success(monthWiseList.getOrDefault(month, listOf())))
+                }
+        }catch (e:Exception){
+            e.printStackTrace()
+            emit(Resource.error("An error occurred", null))
+        }
+    }
 
     override suspend fun getExpenseByIdFromCache(id:Int): Expense {
         return expenseDao.getExpenseById(id)
@@ -67,35 +83,42 @@ class ExpenseRepositoryImpl @Inject constructor(
     override fun getExpensesMonthly(): Flow<Resource<List<MonthlyExpenseItem>>> = flow {
         try {
             emit(Resource.loading(null))
-            val currentExpenses = expenseDao.getAllExpenses()
-            val monthWiseList = currentExpenses.groupBy {
-                it.date?.let { d->
-                    Utility.getMonthFromDate(d)
-                } ?: kotlin.run {
-                    Utility.getMonthFromDate(it.updatedAt)
+
+
+            expenseDao.getAllExpensesFlow()
+                .collect {
+                    val monthlyItems = mutableSetOf<MonthlyExpenseItem>()
+                    Log.d("TAGDEBUG", "getExpensesMonthly: ${it.size}")
+                val currentExpenses = it
+                val monthWiseList = currentExpenses.groupBy {
+                    it.date?.let { d->
+                        Utility.getMonthFromDate(d)
+                    } ?: kotlin.run {
+                        Utility.getMonthFromDate(it.updatedAt)
+                    }
                 }
+
+                monthWiseList.forEach {
+                    val month = it.key
+                    val amount = it.value.sumOf { it.amount.toDouble() }.toFloat()
+                    val endingDate = "${Utility.getDateFromDate(it.value.first().date ?: it.value.first().updatedAt)} ${it.key}"
+                    val startingDate = "${Utility.getDateFromDate(it.value.last().date ?: it.value.last().updatedAt)} ${it.key}"
+                    val duration = "$endingDate - $startingDate"
+
+                    val monthlyExpenseItem = MonthlyExpenseItem(
+                        month = month,
+                        amount = amount,
+                        duration = duration
+                    )
+
+                    monthlyItems.add(monthlyExpenseItem)
+                }
+
+                emit(Resource.success(monthlyItems.toList()))
+
             }
 
-            val monthlyItems = mutableListOf<MonthlyExpenseItem>()
 
-            monthWiseList.forEach {
-                val month = it.key
-                val amount = it.value.sumOf { it.amount.toDouble() }.toFloat()
-                val endingDate = "${Utility.getDateFromDate(it.value.first().date ?: it.value.first().updatedAt)} ${it.key}"
-                val startingDate = "${Utility.getDateFromDate(it.value.last().date ?: it.value.last().updatedAt)} ${it.key}"
-                val duration = "$endingDate - $startingDate"
-
-                val monthlyExpenseItem = MonthlyExpenseItem(
-                    month = month,
-                    amount = amount,
-                    duration = duration
-                )
-
-                monthlyItems.add(monthlyExpenseItem)
-
-            }
-
-            emit(Resource.success(monthlyItems))
         }catch (e:Exception){
             e.printStackTrace()
             emit(Resource.error("An error occurred", null))
