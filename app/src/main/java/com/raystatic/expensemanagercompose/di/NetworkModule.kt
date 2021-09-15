@@ -1,6 +1,7 @@
 package com.raystatic.expensemanagercompose.di
 
 import android.content.Context
+import android.content.pm.PackageManager
 import com.google.gson.Gson
 import com.raystatic.expensemanagercompose.data.remote.ApiService
 import com.raystatic.expensemanagercompose.util.Constants
@@ -22,7 +23,9 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBaseUrl() = Constants.PROD_BASE_URL
+    fun provideBaseUrl(@ApplicationContext context: Context) = context.packageManager
+        .getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+        .metaData["prod_base_url"].toString()
 
     @Singleton
     @Provides

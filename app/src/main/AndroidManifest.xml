@@ -24,6 +24,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="prod_base_url"
+            android:value="${PROD_BASE_URL}"/>
+
+        <meta-data
+            android:name="debug_base_url"
+            android:value="${DEBUG_BASE_URL}"/>
+
     </application>
 
 </manifest>
