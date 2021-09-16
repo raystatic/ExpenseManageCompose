@@ -22,6 +22,9 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml" value="0.22407407407407406" />
         <entry key="app/src/main/res/drawable/ic_wallet.xml" value="0.3333333333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.103125" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_logo.xml" value="0.103125" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_logo_round.xml" value="0.103125" />
       </map>
     </option>
   </component>
