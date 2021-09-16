@@ -87,7 +87,7 @@ dependencies {
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.5.1"
 
     implementation 'com.google.android.gms:play-services-auth:19.2.0'

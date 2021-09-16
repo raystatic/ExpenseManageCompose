@@ -1,0 +1,82 @@
+[
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/drawable_ic_wallet.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/drawable/ic_wallet.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/font_poppins_medium.ttf.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/font/poppins_medium.ttf"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/drawable_ic_add.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/drawable/ic_add.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/font_poppins_light.ttf.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/font/poppins_light.ttf"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/drawable_ic_baseline_arrow_back_ios_24.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/drawable/ic_baseline_arrow_back_ios_24.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/font_poppins_bold.ttf.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/font/poppins_bold.ttf"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/drawable_ic_launcher_background.xml.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/build/intermediates/merged_res/debug/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"
+    }
+]
