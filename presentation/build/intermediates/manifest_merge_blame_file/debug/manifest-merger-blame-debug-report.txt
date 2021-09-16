@@ -1,0 +1,109 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.raystatic.expensemanagercompose"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml
+10
+11    <application
+11-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:5:5-24:19
+12        android:name="com.raystatic.expensemanagercompose.BaseApplication"
+12-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:6:9-75
+13        android:allowBackup="true"
+13-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:7:9-35
+14        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+14-->[androidx.core:core:1.7.0-alpha01] /home/raystatic/.gradle/caches/transforms-3/c7246bafd884c016e6923b1d257e1061/transformed/core-1.7.0-alpha01/AndroidManifest.xml:24:18-86
+15        android:debuggable="true"
+16        android:icon="@mipmap/ic_launcher"
+16-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:8:9-43
+17        android:label="@string/app_name"
+17-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:9:9-41
+18        android:roundIcon="@mipmap/ic_launcher_round"
+18-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:10:9-54
+19        android:supportsRtl="true"
+19-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:11:9-35
+20        android:theme="@style/Theme.ExpenseManagerCompose" >
+20-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:12:9-59
+21        <activity
+21-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:13:9-23:20
+22            android:name="com.raystatic.expensemanagercompose.MainActivity"
+22-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:14:13-76
+23            android:exported="true"
+23-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:15:13-36
+24            android:label="@string/app_name"
+24-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:16:13-45
+25            android:theme="@style/Theme.ExpenseManagerCompose.NoActionBar" >
+25-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:17:13-75
+26            <intent-filter>
+26-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:18:13-22:29
+27                <action android:name="android.intent.action.MAIN" />
+27-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:19:17-69
+27-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:19:25-66
+28
+29                <category android:name="android.intent.category.LAUNCHER" />
+29-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:21:17-77
+29-->/home/raystatic/AndroidStudioProjects/ExpenseManagerCompose/presentation/src/main/AndroidManifest.xml:21:27-74
+30            </intent-filter>
+31        </activity>
+32        <activity
+32-->[androidx.compose.ui:ui-tooling:1.0.1] /home/raystatic/.gradle/caches/transforms-3/0fff15e8bec5026e49151743a859e038/transformed/jetified-ui-tooling-1.0.1/AndroidManifest.xml:25:9-27:39
+33            android:name="androidx.compose.ui.tooling.PreviewActivity"
+33-->[androidx.compose.ui:ui-tooling:1.0.1] /home/raystatic/.gradle/caches/transforms-3/0fff15e8bec5026e49151743a859e038/transformed/jetified-ui-tooling-1.0.1/AndroidManifest.xml:26:13-71
+34            android:exported="true" />
+34-->[androidx.compose.ui:ui-tooling:1.0.1] /home/raystatic/.gradle/caches/transforms-3/0fff15e8bec5026e49151743a859e038/transformed/jetified-ui-tooling-1.0.1/AndroidManifest.xml:27:13-36
+35
+36        <provider
+36-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:26:9-34:20
+37            android:name="androidx.startup.InitializationProvider"
+37-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:27:13-67
+38            android:authorities="com.raystatic.expensemanagercompose.androidx-startup"
+38-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:28:13-68
+39            android:exported="false" >
+39-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:29:13-37
+40            <meta-data
+40-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:31:13-33:52
+41                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+41-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:32:17-85
+42                android:value="androidx.startup" />
+42-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:33:17-49
+43            <meta-data
+43-->[androidx.emoji2:emoji2:1.0.0-alpha03] /home/raystatic/.gradle/caches/transforms-3/60de18e6071e729c11018f19ea28a1f2/transformed/jetified-emoji2-1.0.0-alpha03/AndroidManifest.xml:31:13-33:52
+44                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+44-->[androidx.emoji2:emoji2:1.0.0-alpha03] /home/raystatic/.gradle/caches/transforms-3/60de18e6071e729c11018f19ea28a1f2/transformed/jetified-emoji2-1.0.0-alpha03/AndroidManifest.xml:32:17-75
+45                android:value="androidx.startup" />
+45-->[androidx.emoji2:emoji2:1.0.0-alpha03] /home/raystatic/.gradle/caches/transforms-3/60de18e6071e729c11018f19ea28a1f2/transformed/jetified-emoji2-1.0.0-alpha03/AndroidManifest.xml:33:17-49
+46            <meta-data
+46-->[androidx.lifecycle:lifecycle-process:2.4.0-alpha02] /home/raystatic/.gradle/caches/transforms-3/272346ae697ab9679ac857792ef1d2a1/transformed/jetified-lifecycle-process-2.4.0-alpha02/AndroidManifest.xml:31:13-33:52
+47                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+47-->[androidx.lifecycle:lifecycle-process:2.4.0-alpha02] /home/raystatic/.gradle/caches/transforms-3/272346ae697ab9679ac857792ef1d2a1/transformed/jetified-lifecycle-process-2.4.0-alpha02/AndroidManifest.xml:32:17-78
+48                android:value="androidx.startup" />
+48-->[androidx.lifecycle:lifecycle-process:2.4.0-alpha02] /home/raystatic/.gradle/caches/transforms-3/272346ae697ab9679ac857792ef1d2a1/transformed/jetified-lifecycle-process-2.4.0-alpha02/AndroidManifest.xml:33:17-49
+49        </provider>
+50
+51        <receiver
+51-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:36:9-45:20
+52            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+52-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:37:13-76
+53            android:directBootAware="false"
+53-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:38:13-44
+54            android:enabled="true"
+54-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:39:13-35
+55            android:exported="true"
+55-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:40:13-36
+56            android:permission="android.permission.DUMP" >
+56-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:41:13-57
+57            <intent-filter>
+57-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:42:13-44:29
+58                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+58-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:43:17-91
+58-->[androidx.profileinstaller:profileinstaller:1.0.1] /home/raystatic/.gradle/caches/transforms-3/396571ecfa79f38b82e350b05c67c915/transformed/jetified-profileinstaller-1.0.1/AndroidManifest.xml:43:25-88
+59            </intent-filter>
+60        </receiver>
+61    </application>
+62
+63</manifest>

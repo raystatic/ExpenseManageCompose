@@ -1,0 +1,2 @@
+com/expensemanagercompose/data/BuildConfig.java
+ com.expensemanagercompose.data.BuildConfig
