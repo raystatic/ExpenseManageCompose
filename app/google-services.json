@@ -1,36 +1,35 @@
 {
   "project_info": {
-    "project_number": "285205564189",
-    "project_id": "expensemanagercompose",
-    "storage_bucket": "expensemanagercompose.appspot.com"
+    "project_number": "438585531753",
+    "project_id": "expensemanagerco-1630080929668",
+    "storage_bucket": "expensemanagerco-1630080929668.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:285205564189:android:1100a208b8c3b43cdeeff4",
+        "mobilesdk_app_id": "1:438585531753:android:f285637165530bb7e5f1f8",
         "android_client_info": {
           "package_name": "com.raystatic.expensemanagercompose"
         }
       },
       "oauth_client": [
         {
-          "client_id": "285205564189-bvc7gua7jquao4eqro4b05f9q808g2lh.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "438585531753-a3ktp65dds9s4obs2lrqko9jle0s7sb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raystatic.expensemanagercompose",
+            "certificate_hash": "c59b4d1b4f1d7a96fd4057a218d23c7b28e08be2"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCqytoi0u7YaoPCyCK8h-ipquYbKMwb_EM"
+          "current_key": "AIzaSyBgqj9NPg3otm70PQAQ-huhtecD6FQ66IA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "285205564189-bvc7gua7jquao4eqro4b05f9q808g2lh.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
