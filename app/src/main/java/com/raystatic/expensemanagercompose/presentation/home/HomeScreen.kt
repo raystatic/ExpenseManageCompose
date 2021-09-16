@@ -111,15 +111,36 @@ fun HomeScreen(
                             .align(Alignment.CenterVertically)
                     )
 
-                    Image(
-                        painter = painterResource(id =R.drawable.ic_add),
-                        contentDescription = "add expenses",
+                    Row(
                         modifier = Modifier
                             .padding(10.dp)
                             .clickable {
                                 navController.navigate(Screen.AddExpensesScreen.route + "/-1")
                             }
-                    )
+                    ) {
+
+                        Text(
+                            text = "Add New",
+                            style = TextStyle(
+                                color = Black
+                            ),
+                            fontFamily = appFontFamily,
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        )
+                        
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        Image(
+                            painter = painterResource(id =R.drawable.ic_add),
+                            contentDescription = "add expenses",
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.CenterVertically)
+                        )
+
+                    }
 
                 }
 
@@ -271,7 +292,7 @@ fun BottomSheetContent(
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(color = backgroundColor ?: LightPurple )
+        .background(color = backgroundColor ?: LightPurple)
         .padding(10.dp)
     ){
         expenses?.let {list->
