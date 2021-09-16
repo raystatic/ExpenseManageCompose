@@ -112,6 +112,10 @@ fun LoginScreen(
                         if (it.resultCode == Activity.RESULT_OK){
                             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
                             handleSignInResult(task, scaffoldState, scope, vm)
+                        }else{
+                            scope.launch {
+                                scaffoldState.snackbarHostState.showSnackbar("Unable to login at the moment!")
+                            }
                         }
                     }
 

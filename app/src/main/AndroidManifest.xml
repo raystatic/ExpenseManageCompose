@@ -33,6 +33,10 @@
             android:name="debug_base_url"
             android:value="${DEBUG_BASE_URL}"/>
 
+        <meta-data
+            android:name="google_auth_client"
+            android:value="${GOOGLE_WEB_CLIENT_ID}"/>
+
     </application>
 
 </manifest>

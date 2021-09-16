@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
     tableName = "user"
 )
 data class User(
-    val avatar: String,
+    val avatar: String ?= "",
     val createdAt: String,
     val email: String,
 

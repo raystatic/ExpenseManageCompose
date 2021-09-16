@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.raystatic.expensemanagercompose.data.remote.dto.* { *; }
+-keep class com.raystatic.expensemanagercompose.domain.models.User { *; }
