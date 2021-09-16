@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "285205564189",
+    "project_id": "expensemanagercompose",
+    "storage_bucket": "expensemanagercompose.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285205564189:android:1100a208b8c3b43cdeeff4",
+        "android_client_info": {
+          "package_name": "com.raystatic.expensemanagercompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "285205564189-bvc7gua7jquao4eqro4b05f9q808g2lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqytoi0u7YaoPCyCK8h-ipquYbKMwb_EM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "285205564189-bvc7gua7jquao4eqro4b05f9q808g2lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
