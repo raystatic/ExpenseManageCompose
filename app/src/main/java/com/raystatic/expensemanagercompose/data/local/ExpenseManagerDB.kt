@@ -10,7 +10,7 @@ import com.raystatic.expensemanagercompose.domain.models.User
 
 @Database(
     entities = [User::class, Expense::class],
-    version = 1
+    version = 2
 )
 abstract class ExpenseManagerDB: RoomDatabase() {
 
