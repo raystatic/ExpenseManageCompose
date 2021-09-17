@@ -384,7 +384,9 @@ fun ExpensesItem(
                 .padding(top = 16.dp, bottom = 16.dp, start = 30.dp, end = 30.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
                 val title = expense?.title ?: monthlyExpenseItem?.month  ?: ""
                 Text(
                     text = title,

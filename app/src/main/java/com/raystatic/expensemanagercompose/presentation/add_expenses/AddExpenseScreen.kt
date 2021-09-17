@@ -207,7 +207,11 @@ fun AddExpense(
                     textValue = if (expenseAmount.value == 0f) "" else expenseAmount.value.toString()
                 ){
                     if (it.isNotBlank()){
-                        expenseAmount.value = it.toFloat()
+                        try {
+                            expenseAmount.value = it.toFloat()
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
                     }
 
                 }
@@ -302,7 +306,7 @@ fun AddExpense(
 
                         if (expenseAmount.value == 0f){
                             scope.launch {
-                                scaffoldState.snackbarHostState.showSnackbar("Amount cannot be 0")
+                                scaffoldState.snackbarHostState.showSnackbar("Please enter an amount")
                             }
                             return@RoundedButton
                         }
