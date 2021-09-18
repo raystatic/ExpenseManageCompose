@@ -306,7 +306,9 @@ fun BottomSheetContent(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column{
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.8f)
+                        ){
                             Text(
                                 text = item.title,
                                 style = TextStyle(
