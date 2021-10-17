@@ -28,4 +28,7 @@ interface ExpenseDao {
     @Query("UPDATE expenses SET title=:title, amount=:amount, date=:date WHERE id=:expenseId")
     suspend fun updateExpense(title:String, amount:Float,date:String, expenseId: Int)
 
+    @Query("DELETE FROM expenses")
+    suspend fun deleteAllExpenses()
+
 }

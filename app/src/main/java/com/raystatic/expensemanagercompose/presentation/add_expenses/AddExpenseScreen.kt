@@ -155,7 +155,7 @@ fun AddExpense(
                     }
 
                     Text(
-                        text = "New Expense",
+                        text = "Delete",
                         style = TextStyle(
                             color = Black
                         ),

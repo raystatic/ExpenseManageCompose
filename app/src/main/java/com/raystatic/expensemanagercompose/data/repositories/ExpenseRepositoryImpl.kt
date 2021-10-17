@@ -133,6 +133,7 @@ class ExpenseRepositoryImpl @Inject constructor(
                 val response = apiService.getExpenses(token = token)
                 if (!response.error){
                     response.data?.let { list: List<ExpenseDTO> ->
+                        expenseDao.deleteAllExpenses()
                         for ( i in list){
                             val expenseItem = i.toExpense()
                             expenseDao.insert(expenseItem)
