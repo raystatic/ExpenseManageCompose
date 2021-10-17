@@ -1,6 +1,7 @@
 package com.raystatic.expensemanagercompose.domain.repositories
 
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
+import com.raystatic.expensemanagercompose.data.remote.dto.DeleteExpenseResponse
 import com.raystatic.expensemanagercompose.data.remote.dto.GetExpensesResponse
 import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
 import com.raystatic.expensemanagercompose.domain.models.Expense
@@ -24,5 +25,7 @@ interface ExpenseRepository {
     suspend fun getExpenseByIdFromCache(id:Int):Expense
 
     fun getExpensesByMonth(month:String):Flow<Resource<List<Expense>?>>
+
+    fun deleteExpenseById(expenseId:Int):Flow<Resource<DeleteExpenseResponse>>
 
 }

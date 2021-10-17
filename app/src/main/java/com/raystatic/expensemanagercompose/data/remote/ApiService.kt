@@ -28,4 +28,10 @@ interface ApiService {
         @Body updateExpenseRequest: UpdateExpenseRequest
     ): UpdateExpenseResponse
 
+    @DELETE("expense/deleteExpenseById")
+    suspend fun deleteExpenseById(
+        @Header("auth-token") token: String,
+        @Query("expenseId") expenseId:Int
+    ): DeleteExpenseResponse
+
 }

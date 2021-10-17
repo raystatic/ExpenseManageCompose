@@ -1,12 +1,12 @@
 package com.raystatic.expensemanagercompose.presentation.add_expenses
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
+import com.raystatic.expensemanagercompose.data.remote.dto.DeleteExpenseResponse
 import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
 import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.AddExpenseUseCase
+import com.raystatic.expensemanagercompose.domain.usecases.expenses.DeleteExpenseByIdUseCase
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.GetExpenseByIdFromCache
 import com.raystatic.expensemanagercompose.domain.usecases.expenses.UpdateExpenseUseCase
 import com.raystatic.expensemanagercompose.util.Constants
@@ -24,8 +24,30 @@ class AddExpenseViewModel @Inject constructor(
     private val addExpenseUseCase: AddExpenseUseCase,
     private val updateExpenseUseCase: UpdateExpenseUseCase,
     private val getExpenseByIdFromCache: GetExpenseByIdFromCache,
+    private val deleteExpenseByIdUseCase: DeleteExpenseByIdUseCase,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
+    private val _deleteExpenseState = MutableLiveData<Event<DeleteExpenseState>>()
+    val deleteExpenseState : LiveData<Event<DeleteExpenseState>> get() = _deleteExpenseState
+
+    fun deleteExpenseById(expenseId:Int){
+        deleteExpenseByIdUseCase(expenseId = expenseId).onEach {
+            when(it.status){
+                Status.SUCCESS -> {
+                    _deleteExpenseState.value = Event(DeleteExpenseState(expenseDeleted = it.data?.error == false, message = it.data?.message ?: ""))
+                }
+
+                Status.ERROR -> {
+                    _deleteExpenseState.value = Event(DeleteExpenseState(expenseDeleted = false, message = it.message ?: Constants.UNKNOWN_ERROR))
+                }
+
+                Status.LOADING -> {
+                    _deleteExpenseState.value = Event(DeleteExpenseState(isLoading = true))
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
 
     private val _expenseByIdFromCache = SingleLiveEvent<Event<Expense>>()
     val expenseByIdFromCache:SingleLiveEvent<Event<Expense>> get() = _expenseByIdFromCache

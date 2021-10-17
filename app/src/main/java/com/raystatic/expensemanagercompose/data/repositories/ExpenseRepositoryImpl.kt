@@ -3,10 +3,7 @@ package com.raystatic.expensemanagercompose.data.repositories
 import android.util.Log
 import com.raystatic.expensemanagercompose.data.local.dao.ExpenseDao
 import com.raystatic.expensemanagercompose.data.remote.ApiService
-import com.raystatic.expensemanagercompose.data.remote.dto.AddExpenseRequest
-import com.raystatic.expensemanagercompose.data.remote.dto.ExpenseDTO
-import com.raystatic.expensemanagercompose.data.remote.dto.UpdateExpenseRequest
-import com.raystatic.expensemanagercompose.data.remote.dto.toExpense
+import com.raystatic.expensemanagercompose.data.remote.dto.*
 import com.raystatic.expensemanagercompose.domain.models.Expense
 import com.raystatic.expensemanagercompose.domain.models.MonthlyExpenseItem
 import com.raystatic.expensemanagercompose.domain.repositories.ExpenseRepository
@@ -25,6 +22,24 @@ class ExpenseRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val prefManager: PrefManager
 ): ExpenseRepository{
+
+    override fun deleteExpenseById(expenseId: Int): Flow<Resource<DeleteExpenseResponse>> = flow{
+        try {
+            emit(Resource.loading(null))
+            val token = prefManager.getString(Constants.USERTOKENKEY) ?: ""
+            val response = apiService.deleteExpenseById(token, expenseId)
+            if (!response.error){
+                expenseDao.deleteExpenseById(expenseId)
+            }
+            emit(Resource.success(response))
+        }catch (e:HttpException){
+            e.printStackTrace()
+            emit(Resource.error(Constants.SOMETHING_WENT_WRONG,null))
+        }catch (e: IOException){
+            e.printStackTrace()
+            emit(Resource.error(Constants.CHECK_INTERNET_ERROR,null))
+        }
+    }
 
     override fun getExpensesByMonth(month: String): Flow<Resource<List<Expense>?>> = flow {
         try {

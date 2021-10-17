@@ -60,6 +60,33 @@ fun AddExpense(
 
             val updateExpenseState = vm.updateExpenseState.observeAsState().value?.getContentIfNotHandled()
 
+            val deleteExpenseState = vm.deleteExpenseState.observeAsState().value?.getContentIfNotHandled()
+
+            if (deleteExpenseState?.isLoading == true){
+                Loader(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+
+                }
+            }
+
+            if (deleteExpenseState?.expenseDeleted == true){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Expense deleted successfully!",
+                    )
+                }
+                navController.navigateUp()
+            }
+
+            if (deleteExpenseState?.expenseDeleted == false && deleteExpenseState.message.isNotBlank()){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Cannot delete this expense!",
+                    )
+                }
+            }
+
             if (updateExpenseState?.isLoading == true){
                 Loader(
                     modifier = Modifier.align(Alignment.Center)
@@ -154,17 +181,24 @@ fun AddExpense(
                         navController.navigateUp()
                     }
 
-                    Text(
-                        text = "Delete",
-                        style = TextStyle(
-                            color = Black
-                        ),
-                        fontFamily = appFontFamily,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                    )
+                    if (updatable.value){
+                        Text(
+                            text = "Delete",
+                            style = TextStyle(
+                                color = Black
+                            ),
+                            fontFamily = appFontFamily,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .clickable {
+                                    vm.deleteExpenseById(expenseId.value)
+                                }
+                        )
+                    }
+
+
 
                 }
 
